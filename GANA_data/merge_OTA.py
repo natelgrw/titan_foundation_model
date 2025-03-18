@@ -6,6 +6,9 @@ Created on Tue Oct 22 21:06:36 2019
 Revised on Mon Jan 27 18:38:14 2025
 
 @editor: natelgrw
+
+A python script for assembling combinations of GANA netlists. 
+Writes assembled netlists to FULL_OTA.
 """
 
 # !/usr/bin/env python3
