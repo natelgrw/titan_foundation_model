@@ -1,0 +1,73 @@
+simulator lang=spectre
+global 0
+parameters biasn1={{biasn1}} biasn2={{biasn2}} lg_vbiasn1={{lg_vbiasn1}} lg_vbiasp2={{lg_vbiasp2}} lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB0={{nB0}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB13={{nB13}} nB14={{nB14}} nB15={{nB15}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
+
+subckt single_ended_cascode_current_mirror_pmos Vbiasn2 Vbiasp Vbiasp2 Vinn Vinp Voutp
+MM14 net025 net012 vdd! vdd! pfet l=nA nfin=nB0
+MM13 net024 net012 vdd! vdd! pfet l=nA nfin=nB0
+MM3 Voutp Vbiasp2 net025 vdd! pfet l=nA nfin=nB1
+MM2 net012 Vbiasp2 net024 vdd! pfet l=nA nfin=nB1
+MM7 net11 Vinn net14 net27 pfet l=nA nfin=nB2
+MM6 net16 Vinp net14 net27 pfet l=nA nfin=nB2
+MM5 net14 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
+MM12 net29 net11 gnd! gnd! nfet l=nA nfin=nB4
+MM11 net32 net16 gnd! gnd! nfet l=nA nfin=nB4
+MM10 net33 net11 gnd! gnd! nfet l=nA nfin=nB5
+MM4 net26 net16 gnd! gnd! nfet l=nA nfin=nB5
+MM1 Voutp Vbiasn2 net29 gnd! nfet l=nA nfin=nB6
+MM0 net012 Vbiasn2 net32 gnd! nfet l=nA nfin=nB6
+MM9 net11 Vbiasn2 net33 gnd! nfet l=nA nfin=nB7
+MM8 net16 Vbiasn2 net26 gnd! nfet l=nA nfin=nB7
+ends single_ended_cascode_current_mirror_pmos
+
+subckt LG_load_biasn Vbiasn1 Vbiasn2 Biasp
+MM15 Vbiasn2 Vbiasn2 Vbiasn1 gnd! nfet l=nA nfin=nB8
+MM13 Vbiasn1 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB9
+MM14 Vbiasn2 Biasp vdd! vdd! pfet l=nA nfin=nB10
+ends LG_load_biasn
+
+subckt CR6_3 Vbiasn1 Vbiasn2 Vbiasp
+MM2 Vbiasp Vbiasn2 Vbiasn1 gnd! nfet l=nA nfin=nB11
+MM0 Vbiasn2 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB12
+MM4 Vbiasn1 net15 gnd! gnd! nfet l=nA nfin=nB12
+MM5 net15 net15 gnd! gnd! nfet l=nA nfin=nB13
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB14
+MM1 Vbiasn2 Vbiasp vdd! vdd! pfet l=nA nfin=nB14
+MM6 net15 Vbiasp vdd! vdd! pfet l=nA nfin=nB15
+ends CR6_3
+
+VS (gnd! 0) vsource dc=0 type=dc
+V0 (vdd! gnd!) vsource dc=vdd type=dc
+V2 (in gnd!) vsource type=dc mag=1
+E1 (Vinp cm in gnd!) vcvs gain=.5
+E0 (Vinn cm in gnd!) vcvs gain=-0.5
+V1 (cm gnd!) vsource dc=vcm type=dc
+VP0 (LG_Vbiasp gnd!) vsource dc=lg_vbiasp type=dc
+VP1 (LG_Vbiasp2 gnd!) vsource dc=lg_vbiasp2 type=dc
+VN0 (LG_Vbiasn1 gnd!) vsource dc=lg_vbiasn1 type=dc
+VN1 (Biasn1 gnd!) vsource dc=biasn1 type=dc
+VN2 (Biasn2 gnd!) vsource dc=biasn2 type=dc
+
+xiota LG_Vbiasn2 LG_Vbiasp LG_Vbiasp2 Vinn Vinp Voutp single_ended_cascode_current_mirror_pmos
+
+xiLG_load_biasn LG_Vbiasn1 LG_Vbiasn2 Biasp LG_load_biasn
+
+xibCR6_3 Biasn1 Biasn2 Biasp CR6_3
+
+
+simulatorOptions options psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
+    iabstol=1e-12 temp=tempc tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
+    maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
+    sensfile="../psf/sens.output" checklimitdest=psf
+    ac ac start=1 stop=100G dec=10 annotate=status
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub

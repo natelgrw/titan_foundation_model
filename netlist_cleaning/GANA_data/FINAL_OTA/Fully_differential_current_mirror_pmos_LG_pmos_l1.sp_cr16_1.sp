@@ -1,0 +1,66 @@
+************************************************************************
+* auCdl Netlist:
+* 
+* Library Name:  OTA_class
+* Top Cell Name: Fully_differential_current_mirror_pmos
+* View Name:     schematic
+* Netlisted on:  Sep 11 21:02:54 2019
+************************************************************************
+
+*.BIPOLAR
+*.RESI = 2000 
+*.RESVAL
+*.CAPVAL
+*.DIOPERI
+*.DIOAREA
+*.EQUATION
+*.SCALE METER
+*.MEGA
+.PARAM
+
+*.GLOBAL vdd!
++        gnd!
+
+*.PIN vdd!
+*+    gnd!
+
+************************************************************************
+* Library Name: OTA_class
+* Cell Name:    Fully_differential_current_mirror_pmos
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT Fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
+*.PININFO Vbiasp:I Vbiasp1:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM1 Voutp net13 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM9 net13 net13 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM0 Voutn net19 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM8 net19 net19 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM3 Voutp Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA
+MM2 Voutn Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA
+MM5 net17 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM7 net13 Vinn net17 net24 pmos w=WA l=LA nfin=nA
+MM6 net19 Vinp net17 net24 pmos w=WA l=LA nfin=nA
+.ENDS
+
+
+.SUBCKT LG_pmos_l1 Biasp Vbiasn Vbiasp
+*.PININFO Biasp:I Vbiasn:O Vbiasp:O
+MM0 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+MM8 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM10 Vbiasn Biasp vdd! vdd! pmos w=WA l=LA nfin=nA
+.ENDS
+
+.SUBCKT CR16_1 Vbiasp
+*.PININFO Vbiasp:O
+RR0 vdd! net6 res=rK
+RR1 Vbiasp gnd! res=rK
+MM2 Vbiasp Vbiasp net6 vdd! pmos w=WA l=LA nfin=nA
+.ENDS
+
+
+xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp Fully_differential_current_mirror_pmos
+xiLG_pmos_l1 Biasp LG_Vbiasn LG_Vbiasp LG_pmos_l1
+xibCR16_1 Biasp CR16_1
+.END

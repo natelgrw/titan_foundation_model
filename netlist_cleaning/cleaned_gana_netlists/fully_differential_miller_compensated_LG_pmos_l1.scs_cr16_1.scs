@@ -1,0 +1,61 @@
+simulator lang=spectre
+global 0
+parameters nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nC0={{nC0}} nC1={{nC1}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
+
+subckt fully_differential_miller_compensated Vbiasn Vbiasp Vinn Vinp Voutn Voutp
+MM7 Voutp net15 vdd! vdd! pfet l=nA nfin=nB0
+MM1 net22 Vbiasp vdd! vdd! pfet l=nA nfin=nB0
+MM2 net15 Vbiasp vdd! vdd! pfet l=nA nfin=nB1
+MM5 Voutn net22 vdd! vdd! pfet l=nA nfin=nB1
+MM8 Voutp Vbiasn gnd! gnd! nfet l=nA nfin=nB2
+MM3 net22 Vinp net21 gnd! nfet l=nA nfin=nB3
+MM0 net15 Vinn net21 gnd! nfet l=nA nfin=nB3
+MM4 net21 Vbiasn gnd! gnd! nfet l=nA nfin=nB4
+MM6 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB4
+C1 Voutp net15 capacitor c=nC1
+C0 Voutn net22 capacitor c=nC0
+ends fully_differential_miller_compensated
+
+subckt LG_pmos_l1 Biasp Vbiasn Vbiasp
+MM0 Vbiasp Vbiasn gnd! gnd! nfet l=nA nfin=nB5
+MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
+MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB6
+ends LG_pmos_l1
+
+subckt CR16_1 Vbiasp
+R0 vdd! net6 resistor r=nR0
+R1 Vbiasp gnd! resistor r=nR1
+MM2 Vbiasp Vbiasp net6 vdd! pfet l=nA nfin=nB7
+ends CR16_1
+
+VS (gnd! 0) vsource dc=0 type=dc
+V0 (vdd! gnd!) vsource dc=vdd type=dc
+V2 (in gnd!) vsource type=dc mag=1
+E1 (Vinp cm in gnd!) vcvs gain=.5
+E0 (Vinn cm in gnd!) vcvs gain=-0.5
+V1 (cm gnd!) vsource dc=vcm type=dc
+
+xiota LG_Vbiasn LG_Vbiasp Vinn Vinp Voutn Voutp fully_differential_miller_compensated
+
+xiLG_pmos_l1 Biasp LG_Vbiasn LG_Vbiasp LG_pmos_l1
+
+xibCR16_1 Biasp CR16_1
+
+
+simulatorOptions options psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
+    iabstol=1e-12 temp=tempc tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
+    maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
+    sensfile="../psf/sens.output" checklimitdest=psf
+    ac ac start=1 stop=100G dec=10 annotate=status
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub
