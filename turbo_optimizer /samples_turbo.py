@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import re
 from collections import OrderedDict
-from turbo.turbo import Turbo1
-from eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man import *
-import globalsy
+from working_current.turbo import turbo1
+from working_current.eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man import *
+import working_current.globalsy
 import os
 
 
