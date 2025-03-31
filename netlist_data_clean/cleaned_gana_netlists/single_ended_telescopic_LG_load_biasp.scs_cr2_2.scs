@@ -1,0 +1,61 @@
+simulator lang=spectre
+global 0
+parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nR0={{nR0}} tempc={{tempc}} vbiasp={{vbiasp}} vcm={{vcm}} vdd={{vdd}} 
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
+
+subckt single_ended_telescopic Vbiasn Vbiasp2 Vinn Vinp Voutp
+MM3 Voutp Vinp net11 gnd! nfet l=nA nfin=nB0
+MM0 net13 Vinn net11 gnd! nfet l=nA nfin=nB0
+MM4 net11 Vbiasn gnd! gnd! nfet l=nA nfin=nB1
+MM6 net13 Vbiasp2 net016 vdd! pfet l=nA nfin=nB2
+MM5 Voutp Vbiasp2 net014 vdd! pfet l=nA nfin=nB2
+MM1 net014 net13 vdd! vdd! pfet l=nA nfin=nB3
+MM2 net016 net13 vdd! vdd! pfet l=nA nfin=nB3
+ends single_ended_telescopic
+
+subckt LG_load_biasp Biasn Vbiasp1 Vbiasp2
+MM0 Vbiasp2 Biasn gnd! gnd! nfet l=nA nfin=nB4
+MM1 Vbiasp2 Vbiasp2 Vbiasp1 vdd! pfet l=nA nfin=nB4
+MM3 Vbiasp1 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB5
+ends LG_load_biasp
+
+subckt CR2_2_wilson Vbiasn Vbiasp
+R0 Vbiasn gnd! resistor r=nR0
+MM2 Vbiasp net12 Vbiasn gnd! nfet l=nA nfin=nB6
+MM0 net12 Vbiasn gnd! gnd! nfet l=nA nfin=nB7
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB8
+MM1 net12 Vbiasp vdd! vdd! pfet l=nA nfin=nB8
+ends CR2_2_wilson
+
+VS (gnd! 0) vsource dc=0 type=dc
+V0 (vdd! gnd!) vsource dc=vdd type=dc
+V2 (in gnd!) vsource type=dc mag=1
+E1 (Vinp cm in gnd!) vcvs gain=.5
+E0 (Vinn cm in gnd!) vcvs gain=-0.5
+V1 (cm gnd!) vsource dc=vcm type=dc
+VN0 (LG_Vbiasn gnd!) vsource dc=lg_vbiasn type=dc
+VP0 (LG_Vbiasp1 gnd!) vsource dc=lg_vbiasp1 type=dc
+VP1 (Vbiasp gnd!) vsource dc=vbiasp type=dc
+
+xiota LG_Vbiasn LG_Vbiasp2 Vinn Vinp Voutp single_ended_telescopic
+
+xiLG_load_biasp Biasn LG_Vbiasp1 LG_Vbiasp2 LG_load_biasp
+
+xibCR2_2_wilson Biasn Vbiasp CR2_2_wilson
+
+
+simulatorOptions options psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
+    iabstol=1e-12 temp=tempc tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
+    maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
+    sensfile="../psf/sens.output" checklimitdest=psf
+    ac ac start=1 stop=100G dec=10 annotate=status
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub

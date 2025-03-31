@@ -1,0 +1,50 @@
+database_dir: "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/checkpoint/db/single_ended_cascode_current_mirror"
+
+measurement:
+  meas_params: {} # high level measurement params go here for post process
+  testbenches:
+    ac_dc:
+      netlist_template: "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/netlist_templates/7nm/single_ended_cascode_current_mirror.scs"
+      tb_module: "eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man"
+      tb_class: "ACTB"
+      post_process_function: "process_ac" # a class method defined in meas manager
+      tb_params: {} # lower level params for tb evaluation goes here
+
+params:
+  nA1: !!python/tuple [!!float 5.2e-07, !!float 5.6e-07, 13]
+  nB1: !!python/tuple [7, 9, 3]
+  nA2: !!python/tuple [!!float 7.2e-08, !!float 7.6e-08, 13]
+  nB2: !!python/tuple [7, 9, 3]
+  nA3: !!python/tuple [!!float 1.28e-07, !!float 1.36e-07, 13]
+  nB3: !!python/tuple [3, 5, 3]
+  nA4: !!python/tuple [!!float 3.2e-07, !!float 3.5e-07, 13]
+  nB4: !!python/tuple [1, 3, 3]
+  nA5: !!python/tuple [!!float 9e-09, !!float 1.1e-08, 13]
+  nB5: !!python/tuple [6, 8, 3]
+  nA6: !!python/tuple [!!float 3.2e-07, !!float 3.4e-07, 13]
+  nB6: !!python/tuple [2, 4, 3]
+  nA7: !!python/tuple [!!float 2.5e-08, !!float 2.8e-08, 13]
+  nB7: !!python/tuple [9, 11, 3]
+  nA8: !!python/tuple [!!float 3.8e-08, !!float 4.2e-08, 13]
+  nB8: !!python/tuple [3, 5, 3]
+  vbiasp2: !!python/tuple [!!float 0.26, !!float 0.30, 13]
+  vbiasn0: !!python/tuple [!!float 0.48, !!float 0.52, 13]
+  vbiasn2: !!python/tuple [!!float 0.43, !!float 0.47, 13]
+  vcm: !!python/tuple [!!float 0.40, !!float 0.40, 1]
+  vdd: !!python/tuple [!!float 0.8, !!float 0.8, 1]
+  tempc: !!python/tuple [!!float 27, !!float 27, 1]
+
+spec_range:
+  gain: [!!float 1, null, 1]
+  funity: [!!float 3.0e+5, null, 1]
+  pm: [60.0, null, 1]
+
+normalize: !!python/tuple [!!float 20.0e+6,3300,!!float 10e-6,70]
+
+target_spec:
+  gain: !!python/tuple [3300]
+  funity: !!python/tuple [!!float 20.0e+6]
+  pm: !!python/tuple [70]
+  power: !!python/tuple [10e-6]
+
+
