@@ -337,9 +337,6 @@ if __name__ == "__main__":
     process_all_files(input_directory_4, output_directory)
     process_all_files(input_directory_5, output_directory)
     process_all_files(input_directory_6, output_directory)
-
-    # Process all files in the directory
-    # process_all_files(input_directory, output_directory)
     
 
     
