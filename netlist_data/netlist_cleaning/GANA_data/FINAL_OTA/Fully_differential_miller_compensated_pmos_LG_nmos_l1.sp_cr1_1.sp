@@ -1,0 +1,67 @@
+************************************************************************
+* auCdl Netlist:
+*
+* Library Name:  OTA_class
+* Top Cell Name: Fully_differential_miller_compensated_pmos
+* View Name:     schematic
+* Netlisted on:  Sep 11 21:03:30 2019
+************************************************************************
+
+*.BIPOLAR
+*.RESI = 2000
+*.RESVAL
+*.CAPVAL
+*.DIOPERI
+*.DIOAREA
+*.EQUATION
+*.SCALE METER
+*.MEGA
+.PARAM
+
+*.GLOBAL vdd!
++        gnd!
+
+*.PIN vdd!
+*+    gnd!
+
+************************************************************************
+* Library Name: OTA_class
+* Cell Name:    Fully_differential_miller_compensated_pmos
+* View Name:    schematic
+************************************************************************
+
+.SUBCKT Fully_differential_miller_compensated_pmos Vbiasn1 Vbiasp Vinn Vinp Voutn Voutp
+*.PININFO Vbiasn1:I Vbiasp:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM1 Voutn net21 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM13 Voutp net25 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM9 net25 Vbiasn1 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM8 net21 Vbiasn1 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM0 Voutn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM12 Voutp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM11 net17 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM10 net25 Vinn net17 net28 pmos w=WA l=LA nfin=nA
+MM7 net21 Vinp net17 net28 pmos w=WA l=LA nfin=nA
+CC0 Voutn net21 1p
+CC2 Voutp net25 1p
+.ENDS
+
+
+.SUBCKT LG_nmos_l1 Biasn Vbiasn Vbiasp
+*.PININFO Biasn:I Vbiasn:O Vbiasp:O
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
+MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM0 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+.ENDS
+
+.SUBCKT CR1_1 Vbiasn
+*.PININFO Vbiasn:O
+RRF vdd! Vbiasn res=rK
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+.ENDS
+
+
+xiota LG_Vbiasn1 LG_Vbiasp Vinn Vinp Voutn Voutp Fully_differential_miller_compensated_pmos
+xiLG_nmos_l1 Biasn LG_Vbiasn LG_Vbiasp LG_nmos_l1
+xibCR1_1 Biasn CR1_1
+.END
