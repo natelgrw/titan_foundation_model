@@ -323,10 +323,20 @@ def process_all_files(input_dir, output_dir):
 
 if __name__ == "__main__":
     input_directory_1 = "netlist_cleaning/OTATUM_data/OTATUM_set_1"
+    input_directory_2 = "netlist_cleaning/OTATUM_data/OTATUM_set_2"
+    input_directory_3 = "netlist_cleaning/OTATUM_data/OTATUM_set_3"
+    input_directory_4 = "netlist_cleaning/OTATUM_data/OTATUM_set_4"
+    input_directory_5 = "netlist_cleaning/OTATUM_data/OTATUM_set_5"
+    input_directory_6 = "netlist_cleaning/OTATUM_data/OTATUM_set_6"
 
     output_directory = "cleaned_otatum_netlists"
 
     process_all_files(input_directory_1, output_directory)
+    process_all_files(input_directory_2, output_directory)
+    process_all_files(input_directory_3, output_directory)
+    process_all_files(input_directory_4, output_directory)
+    process_all_files(input_directory_5, output_directory)
+    process_all_files(input_directory_6, output_directory)
 
     # Process all files in the directory
     # process_all_files(input_directory, output_directory)
