@@ -12,6 +12,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man import *
 import globalsy
+import re
 
 #import psutil
 
@@ -24,135 +25,112 @@ region_mapping = {
         4: 'breakdown'
         }
 
-class OrderedDictYAMLLoader(yaml.Loader):
-    """
-    A YAML loader that loads mappings into ordered dictionaries.
-    """
-
-    def __init__(self, *args, **kwargs):
-        yaml.Loader.__init__(self, *args, **kwargs)
-
-        self.add_constructor(u'tag:yaml.org,2002:map', type(self).construct_yaml_map)
-        self.add_constructor(u'tag:yaml.org,2002:omap', type(self).construct_yaml_map)
-
-    def construct_yaml_map(self, node):
-        data = OrderedDict()
-        yield data
-        value = self.construct_mapping(node)
-        data.update(value)
-
-    def construct_mapping(self, node, deep=False):
-        if isinstance(node, yaml.MappingNode):
-            self.flatten_mapping(node)
-        else:
-            raise yaml.constructor.ConstructorError(None, None,
-                                                    'expected a mapping node, but found %s' % node.id, node.start_mark)
-
-        mapping = OrderedDict()
-        for key_node, value_node in node.value:
-            key = self.construct_object(key_node, deep=deep)
-            value = self.construct_object(value_node, deep=deep)
-            mapping[key] = value
-        return mapping
 
 # Define the ranges
-nA1_range = (7e-9, 40e-9)
-nB1_range = (1, 200)
-nA2_range = (10e-9, 40e-9)
-nB2_range = (1, 200)
-nA3_range = (10e-9, 40e-9)
-nB3_range = (1, 200)
-nA4_range = (10e-9, 40e-9)
-nB4_range = (1, 200)
-nA5_range = (10e-9, 40e-9)
-nB5_range = (1, 200)
-nA6_range = (10e-9, 40e-9)
-nB6_range = (1, 200)
-nA7_range = (10e-9, 40e-9)
-nB7_range = (1, 200)
-nA8_range = (10e-9, 40e-9)
-nB8_range = (1, 200)
-nA9_range = (10e-9, 40e-9)
-nB9_range = (1, 200)
-vbiasp0_range = (0, 0.8)
-vbiasp1_range = (0, 0.8)
-vbiasp2_range = (0, 0.8)
-vbiasn0_range = (0, 0.8)
-vbiasn1_range = (0, 0.8)
-vbiasn2_range = (0, 0.8)
-cc_range = (1e-15, 1e-11)
-vcm = 0.40
-vdd = 0.8
-tempc = 27
+# nA1_range = (7e-9, 40e-9)
+# nB1_range = (1, 200)
+# nA2_range = (10e-9, 40e-9)
+# nB2_range = (1, 200)
+# nA3_range = (10e-9, 40e-9)
+# nB3_range = (1, 200)
+# nA4_range = (10e-9, 40e-9)
+# nB4_range = (1, 200)
+# nA5_range = (10e-9, 40e-9)
+# nB5_range = (1, 200)
+# nA6_range = (10e-9, 40e-9)
+# nB6_range = (1, 200)
+# nA7_range = (10e-9, 40e-9)
+# nB7_range = (1, 200)
+# nA8_range = (10e-9, 40e-9)
+# nB8_range = (1, 200)
+# nA9_range = (10e-9, 40e-9)
+# nB9_range = (1, 200)
+# vbiasp0_range = (0, 0.8)
+# vbiasp1_range = (0, 0.8)
+# vbiasp2_range = (0, 0.8)
+# vbiasn0_range = (0, 0.8)
+# vbiasn1_range = (0, 0.8)
+# vbiasn2_range = (0, 0.8)
+# cc_range = (1e-15, 1e-11)
+# vcm = 0.40
+# vdd = 0.8
+# tempc = 27
 
-lb = np.array([
-nA1_range[0], 
-nB1_range[0], 
-nA2_range[0], 
-nB2_range[0], 
-nA3_range[0], 
-nB3_range[0], 
-nA4_range[0], 
-nB4_range[0], 
-nA5_range[0], 
-nB5_range[0], 
-nA6_range[0], 
-nB6_range[0], 
-nA7_range[0], 
-nB7_range[0], 
-nA8_range[0], 
-nB8_range[0], 
-#nA9_range[0], 
-#nB9_range[0], 
-#vbiasp0_range[0],
-#vbiasp1_range[0], 
-vbiasp2_range[0], 
-vbiasn0_range[0], 
-#vbiasn1_range[0], 
-vbiasn2_range[0],
-#cc_range[0]
-])
-ub = np.array([
-nA1_range[1], 
-nB1_range[1], 
-nA2_range[1], 
-nB2_range[1], 
-nA3_range[1], 
-nB3_range[1], 
-nA4_range[1], 
-nB4_range[1], 
-nA5_range[1], 
-nB5_range[1], 
-nA6_range[1], 
-nB6_range[1], 
-nA7_range[1], 
-nB7_range[1], 
-nA8_range[1], 
-nB8_range[1], 
-#nA9_range[1], 
-#nB9_range[1], 
-#vbiasp0_range[1],
-#vbiasp1_range[1], 
-vbiasp2_range[1], 
-vbiasn0_range[1], 
-#vbiasn1_range[1], 
-vbiasn2_range[1],
-#cc_range[1]
-])
+scs_file = "/Users/heba/Desktop/chandrakasan_lab/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/netlist_templates/7nm/single_ended_cascode_current_mirror_pmos.scs"
+
+def transistor_params_netlist(scs_file):
+    with open(scs_file, "r") as file:
+        lines = file.readlines()
+    transistors = {}
+    for line in lines:
+        match = re.search(r'(MM\d+)\s+[\w!]+\s+[\w!]+\s+[\w!]+\s+[\w!]+\s+(pfet|nfet)\s+l=(\S+)\s+nfin=(\S+)', line)
+        if match:
+            name, type_, length, width = match.groups()[0], match.groups()[1], match.groups()[2], match.groups()[3]
+            transistors[name] = {"type": type_, "L": length, "W": width}
+    return transistors
+
+transistor_params = transistor_params_netlist(scs_file) #TODO change this to current netlist
+
+vcm = 0.4       # Common-mode input voltage
+vdd = 0.8       # Supply voltage
+tempc = 27      # Temperature in °C
+
+def generate_bounds(transistor_params, param_values):
+    lb = []
+    ub = []
+    param_names = []
+
+    for name, comp in transistor_params.items():
+        for param_type in ['L', 'W']:
+            param_name = comp[param_type]
+            if param_name not in param_names:  # Avoid duplicates
+                param_names.append(param_name)
+                if param_name in param_values:
+                    val = float(param_values[param_name])
+                    low, high = val * 0.5, val * 1.5
+                else:
+                    # Default hard-coded fallback if param not in values
+                    low, high = 1e-9, 1e-7
+                lb.append(low)
+                ub.append(high)
+    
+    return np.array(lb), np.array(ub), param_names
+
+param_values = {}
+# i.e. {'nA1': 6.66e-08, 'nB1': 5.0, 'nA2': 7.1e-08, 'nB2': 6.0}
+
+lb, ub, param_order = generate_bounds(transistor_params, param_values) #TODO: determine param values with nathan
+
 # Get a random sample
 
-CIR_YAML = "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/specs_test/single_ended_cascode_current_mirror.yaml"
-with open(CIR_YAML, 'r') as f:
-            yaml_data = yaml.load(f, OrderedDictYAMLLoader)
-f.close()
-params = yaml_data['params']
-specs = yaml_data['target_spec']
-specs_ideal = []
-for spec in list(specs.values()):
-             specs_ideal.append(spec)
-specs_ideal = np.array(specs_ideal)
-params_id = list(params.keys())
-specs_id = list(specs.keys())  
+# CIR_YAML = "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/specs_test/single_ended_cascode_current_mirror.yaml"
+# with open(CIR_YAML, 'r') as f:
+#             yaml_data = yaml.load(f, OrderedDictYAMLLoader)
+# f.close()
+# params = yaml_data['params']
+# specs = yaml_data['target_spec']
+# specs_ideal = []
+# for spec in list(specs.values()):
+#              specs_ideal.append(spec)
+# specs_ideal = np.array(specs_ideal)
+# params_id = list(params.keys())
+# specs_id = list(specs.keys())
+# 
+
+
+#CAN CHANGE
+
+specs_dict = {
+    "gain": 1680.0,
+    "UGBW": 3.49e9,
+    "PM": -117.0,
+    "power": 5.85e-7
+}
+
+specs_id = list(specs_dict.keys())
+specs_ideal = list(specs_dict.values())
+params_id = param_order + ["vcm", "vdd", "tempc"]
+
 
 #import ipdb; ipdb.set_trace()
 
@@ -199,18 +177,11 @@ class Levy:
         # val = np.sin(np.pi * w[0]) ** 2 + \
         #     np.sum((w[1:self.dim - 1] - 1) ** 2 * (1 + 10 * np.sin(np.pi * w[1:self.dim - 1] + 1) ** 2)) + \
         #     (w[self.dim - 1] - 1) ** 2 * (1 + np.sin(2 * np.pi * w[self.dim - 1])**2)
-        CIR_YAML = "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/specs_test/single_ended_cascode_current_mirror.yaml"
-        sim_env = OpampMeasMan(CIR_YAML) 
-        sample = x
-        sample[1] = round(sample[1])
-        sample[3] = round(sample[3])
-        sample[5] = round(sample[5])
-        sample[7] = round(sample[7])
-        sample[9] = round(sample[9])
-        sample[11] = round(sample[11])
-        sample[13] = round(sample[13])
-        sample[15] = round(sample[15])
-        # sample[17] = round(sample[17])
+        sim_env = OpampMeasMan(scs_file)
+        sample = x.copy()
+        for i, param in enumerate(self.params_id): #TODO: check with dimple is there should just be nBs in list or also nA
+            if param.startswith('nB'):  # Discrete values
+                sample[i] = round(sample[i])
         sample = np.append(sample,self.vcm)
         sample = np.append(sample,self.vdd)
         sample = np.append(sample,self.tempc)
@@ -288,7 +259,7 @@ class Levy:
        # print(proc.open_files())
         return val
 
-f = Levy(19, params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb)
+f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb)
 
 turbo1 = Turbo1(
     f=f,  # Handle to objective function
