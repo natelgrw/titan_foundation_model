@@ -29,7 +29,7 @@ def remove_comments_and_params(source_file_list):
     """
     cleaned_list = []
     for line in source_file_list:
-        if line.startswith("*"):
+        if line.startswith("*") and "*.PININFO" not in line:
             continue 
         elif ".PARAM" in line:
             continue
@@ -83,9 +83,7 @@ def edit_circuit_components(source_file_list):
         list: A modified list of netlist lines with updated component parameters.
     """
     edited_list = []
-    nfin_count = 0
     resistor_counter = 0
-    skip = False
 
     for i, line in enumerate(source_file_list):
         line_tokens = line.split()
@@ -94,39 +92,17 @@ def edit_circuit_components(source_file_list):
             edited_list.append(line)
             continue
 
-        if skip:
-            skip = False
-            continue
-
         if line_tokens[0].startswith("MM"):
-            next_line_tokens = source_file_list[i + 1].split() if i + 1 < len(source_file_list) else []
-
             # Standardize transistor types
             line_tokens = ["l=nA" if l.startswith("l=") else "nfet" if l.startswith("nmos") 
-                           else "pfet" if l.startswith("pmos") else l for l in line_tokens]
-            next_line_tokens = ["l=nA" if l.startswith("l=") else "nfet" if l.startswith("nmos") 
-                                else "pfet" if l.startswith("pmos") else l for l in next_line_tokens]
-
-            if (next_line_tokens and next_line_tokens[0].startswith("MM") and 
-                any(line_tokens[j] == next_line_tokens[j] for j in range(1, 4))):
-                for tokens in (line_tokens, next_line_tokens):
-                    for j, elt in enumerate(tokens):
-                        if elt == "nfin=nA":
-                            tokens[j] = f"nfin=nB{nfin_count}"
-                        elif elt.startswith("w="):
-                            tokens[j] = ""  
-                nfin_count += 1
-                edited_list.append(" ".join(filter(None, line_tokens)))
-                edited_list.append(" ".join(filter(None, next_line_tokens)))
-                skip = True
-            else:
-                for j, elt in enumerate(line_tokens):
-                    if elt == "nfin=nA":
-                        line_tokens[j] = f"nfin=nB{nfin_count}"
-                    elif elt.startswith("w="):
-                        line_tokens[j] = ""
-                nfin_count += 1
-                edited_list.append(" ".join(filter(None, line_tokens)))
+                           else "pfet" if l.startswith("pmos") else "" if l.startswith("w=") 
+                           else l for l in line_tokens]
+ 
+            for tokens in (line_tokens):
+                for j, elt in enumerate(tokens):
+                    if elt.startswith("nfin=nA"):
+                        tokens[j] = f"nfin=nB{elt[7:]}"
+            edited_list.append(" ".join(filter(None, line_tokens)))
 
         elif line_tokens[0].startswith("RR"):
             number = line_tokens[0][2:]
@@ -326,7 +302,29 @@ def append_setup(output, source_file_list):
     output.append(nfet_path_name_str)
     output.append(pfet_path_name_str)
     output.append("")
-  
+
+def transistor_pairing_edits(unpaired_list):
+    output = []
+    temp_base_num = 0
+    base_num = 0
+    for line in unpaired_list:
+        if line.startswith("MM"):
+            line_list = line.split()
+            nfin_num = int(line_list[-1][7:])
+            if nfin_num + base_num > temp_base_num:
+                temp_base_num = nfin_num + base_num
+            line_list[-1] = f"nfin=nB{nfin_num + base_num}"
+            new_line = " ".join(line_list)
+            output.append(new_line)
+        elif line.startswith("ends"):
+            base_num += (temp_base_num - base_num)
+            temp_base_num = 0
+            output.append(line)
+        else:
+            output.append(line)
+
+    return output
+
 def process_netlist(input_file, output_file):
     """ 
     Takes in a GANA .sp netlist and writes a reformatted and cleaned
@@ -349,12 +347,13 @@ def process_netlist(input_file, output_file):
     append_combined_circuit_connections(output_lines, input_lines)
     append_simulator_options(output_lines)
     append_save(output_lines, comps)
-    append_setup(setup_lines, output_lines)
+    paired_lines = transistor_pairing_edits(output_lines)
+    append_setup(setup_lines, paired_lines)
 
-    output_lines = setup_lines + output_lines[:]
+    final_lines = setup_lines + paired_lines[:]
 
     with open(output_file, "w") as file:
-        for str_line in output_lines:
+        for str_line in final_lines:
             file.write(str_line + "\n")
 
 def process_all_files(input_dir, output_dir):

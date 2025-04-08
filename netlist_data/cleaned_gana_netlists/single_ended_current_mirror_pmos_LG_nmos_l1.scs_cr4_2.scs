@@ -1,39 +1,42 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasn={{lg_vbiasn}} nA={{nA}} nB0={{nB0}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} tempc={{tempc}} vbiasp={{vbiasp}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasn={{lg_vbiasn}} nA={{nA}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB13={{nB13}} nB14={{nB14}} nB15={{nB15}} nB16={{nB16}} nB17={{nB17}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} tempc={{tempc}} vbiasp={{vbiasp}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt single_ended_current_mirror_pmos Vbiasp Vinn Vinp Voutp
-MM3 Voutp net17 vdd! vdd! pfet l=nA nfin=nB0
-MM2 net17 net17 vdd! vdd! pfet l=nA nfin=nB0
-MM7 net9 Vinn net13 net22 pfet l=nA nfin=nB1
-MM6 net15 Vinp net13 net22 pfet l=nA nfin=nB1
-MM5 net13 Vbiasp vdd! vdd! pfet l=nA nfin=nB2
-MM1 Voutp net9 gnd! gnd! nfet l=nA nfin=nB3
-MM0 net17 net15 gnd! gnd! nfet l=nA nfin=nB3
+*.PININFO Vbiasp:I Vinn:I Vinp:I Voutp:O
+MM3 Voutp net17 vdd! vdd! pfet l=nA nfin=nB1
+MM2 net17 net17 vdd! vdd! pfet l=nA nfin=nB1
+MM7 net9 Vinn net13 net22 pfet l=nA nfin=nB2
+MM6 net15 Vinp net13 net22 pfet l=nA nfin=nB2
+MM5 net13 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
+MM1 Voutp net9 gnd! gnd! nfet l=nA nfin=nB4
+MM0 net17 net15 gnd! gnd! nfet l=nA nfin=nB5
 MM9 net9 net9 gnd! gnd! nfet l=nA nfin=nB4
-MM8 net15 net15 gnd! gnd! nfet l=nA nfin=nB4
+MM8 net15 net15 gnd! gnd! nfet l=nA nfin=nB5
 ends single_ended_current_mirror_pmos
 
 subckt LG_nmos_l1 Biasn Vbiasn Vbiasp
-MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB5
-MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB6
-MM0 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
+*.PININFO Biasn:I Vbiasn:O Vbiasp:O
+MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB6
+MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB7
+MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB8
+MM0 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB8
 ends LG_nmos_l1
 
 subckt CR4_2 Vbiasn Vbiasp
-MM11 net023 net024 Vbiasn gnd! nfet l=nA nfin=nB7
-MM8 net025 net010 net023 gnd! nfet l=nA nfin=nB8
-MM9 net024 net024 net023 gnd! nfet l=nA nfin=nB8
-MM7 net010 net010 net025 gnd! nfet l=nA nfin=nB9
-MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB10
-MM0 Vbiasp net025 gnd! gnd! nfet l=nA nfin=nB10
-MM10 net024 Vbiasp vdd! vdd! pfet l=nA nfin=nB11
-MM4 net010 Vbiasp vdd! vdd! pfet l=nA nfin=nB11
-MM3 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB12
-MM1 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB12
+*.PININFO Vbiasn:O Vbiasp:O
+MM11 net023 net024 Vbiasn gnd! nfet l=nA nfin=nB9
+MM8 net025 net010 net023 gnd! nfet l=nA nfin=nB10
+MM9 net024 net024 net023 gnd! nfet l=nA nfin=nB11
+MM7 net010 net010 net025 gnd! nfet l=nA nfin=nB12
+MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB13
+MM0 Vbiasp net025 gnd! gnd! nfet l=nA nfin=nB14
+MM10 net024 Vbiasp vdd! vdd! pfet l=nA nfin=nB15
+MM4 net010 Vbiasp vdd! vdd! pfet l=nA nfin=nB16
+MM3 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB15
+MM1 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB17
 ends CR4_2
 
 VS (gnd! 0) vsource dc=0 type=dc

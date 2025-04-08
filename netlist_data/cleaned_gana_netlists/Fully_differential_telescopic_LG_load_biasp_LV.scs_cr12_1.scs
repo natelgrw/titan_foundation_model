@@ -1,29 +1,32 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
-subckt Fully_differential_telescopic Vbiasn Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp
-MM5 Voutp Vbiasp2 net18 net18 pfet l=nA nfin=nB0
-MM6 Voutn Vbiasp2 net13 net13 pfet l=nA nfin=nB0
-MM1 net18 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB1
-MM2 net13 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB1
-MM3 Voutp Vinp net16 gnd! nfet l=nA nfin=nB2
-MM0 Voutn Vinn net16 gnd! nfet l=nA nfin=nB2
-MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB3
-ends Fully_differential_telescopic
+subckt fully_differential_telescopic Vbiasn Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp
+*.PININFO Vbiasn:I Vbiasp1:I Vbiasp2:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM5 Voutp Vbiasp2 net18 net18 pfet l=nA nfin=nB1
+MM6 Voutn Vbiasp2 net13 net13 pfet l=nA nfin=nB1
+MM1 net18 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB2
+MM2 net13 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB2
+MM3 Voutp Vinp net16 gnd! nfet l=nA nfin=nB3
+MM0 Voutn Vinn net16 gnd! nfet l=nA nfin=nB3
+MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB4
+ends fully_differential_telescopic
 
 subckt LG_load_biasp_LV Biasn Vbiasp2
-MM0 Vbiasp2 Biasn gnd! gnd! nfet l=nA nfin=nB4
-MM3 net8 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB5
-MM1 Vbiasp2 Vbiasp2 net8 vdd! pfet l=nA nfin=nB5
+*.PININFO Biasn:I Vbiasp2:O
+MM0 Vbiasp2 Biasn gnd! gnd! nfet l=nA nfin=nB5
+MM3 net8 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB6
+MM1 Vbiasp2 Vbiasp2 net8 vdd! pfet l=nA nfin=nB7
 ends LG_load_biasp_LV
 
 subckt CR12_1 Vbiasn
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB6
-MM1 net10 Vbiasn gnd! gnd! nfet l=nA nfin=nB6
-MM2 Vbiasn net10 vdd! vdd! pfet l=nA nfin=nB7
+*.PININFO Vbiasn:O
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB8
+MM1 net10 Vbiasn gnd! gnd! nfet l=nA nfin=nB8
+MM2 Vbiasn net10 vdd! vdd! pfet l=nA nfin=nB9
 RF vdd! Vbiasn resistor r=nR0
 R0 vdd! net10 resistor r=nR1
 ends CR12_1
@@ -37,7 +40,7 @@ V1 (cm gnd!) vsource dc=vcm type=dc
 VN0 (LG_Vbiasn gnd!) vsource dc=lg_vbiasn type=dc
 VP0 (LG_Vbiasp1 gnd!) vsource dc=lg_vbiasp1 type=dc
 
-xiota LG_Vbiasn LG_Vbiasp1 LG_Vbiasp2 Vinn Vinp Voutn Voutp Fully_differential_telescopic
+xiota LG_Vbiasn LG_Vbiasp1 LG_Vbiasp2 Vinn Vinp Voutn Voutp fully_differential_telescopic
 
 xiLG_load_biasp_LV Biasn LG_Vbiasp2 LG_load_biasp_LV
 

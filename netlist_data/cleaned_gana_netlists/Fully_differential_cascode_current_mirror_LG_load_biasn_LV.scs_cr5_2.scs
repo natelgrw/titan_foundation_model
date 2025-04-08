@@ -1,41 +1,44 @@
 simulator lang=spectre
 global 0
-parameters biasn={{biasn}} lg_vbiasn1={{lg_vbiasn1}} lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} lg_vbiasp2={{lg_vbiasp2}} nA={{nA}} nB0={{nB0}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB13={{nB13}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters biasn={{biasn}} lg_vbiasn1={{lg_vbiasn1}} lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} lg_vbiasp2={{lg_vbiasp2}} nA={{nA}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB13={{nB13}} nB14={{nB14}} nB15={{nB15}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
-subckt Fully_differential_cascode_current_mirror Vbiasn Vbiasn1 Vbiasn2 Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp
-MM3 net22 Vinp net9 gnd! nfet l=nA nfin=nB0
-MM0 net31 Vinn net9 gnd! nfet l=nA nfin=nB0
-MM4 net9 Vbiasn gnd! gnd! nfet l=nA nfin=nB1
-MM14 Voutp Vbiasn2 net34 gnd! nfet l=nA nfin=nB2
-MM13 Voutn Vbiasn2 net21 gnd! nfet l=nA nfin=nB2
-MM8 net34 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB3
-MM7 net21 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB3
-MM2 net32 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB4
-MM1 net23 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB4
+subckt fully_differential_cascode_current_mirror Vbiasn Vbiasn1 Vbiasn2 Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp
+*.PININFO Vbiasn:I Vbiasn1:I Vbiasn2:I Vbiasp1:I Vbiasp2:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM3 net22 Vinp net9 gnd! nfet l=nA nfin=nB1
+MM0 net31 Vinn net9 gnd! nfet l=nA nfin=nB1
+MM4 net9 Vbiasn gnd! gnd! nfet l=nA nfin=nB2
+MM14 Voutp Vbiasn2 net34 gnd! nfet l=nA nfin=nB3
+MM13 Voutn Vbiasn2 net21 gnd! nfet l=nA nfin=nB3
+MM8 net34 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB4
+MM7 net21 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB4
+MM2 net32 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB5
+MM1 net23 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB6
 MM6 net33 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB5
-MM5 net20 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB5
-MM12 net31 Vbiasp1 net32 vdd! pfet l=nA nfin=nB6
-MM11 net22 Vbiasp1 net23 vdd! pfet l=nA nfin=nB6
+MM5 net20 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB6
+MM12 net31 Vbiasp1 net32 vdd! pfet l=nA nfin=nB7
+MM11 net22 Vbiasp1 net23 vdd! pfet l=nA nfin=nB8
 MM10 Voutp Vbiasp1 net33 vdd! pfet l=nA nfin=nB7
-MM9 Voutn Vbiasp1 net20 vdd! pfet l=nA nfin=nB7
-ends Fully_differential_cascode_current_mirror
+MM9 Voutn Vbiasp1 net20 vdd! pfet l=nA nfin=nB8
+ends fully_differential_cascode_current_mirror
 
 subckt LG_load_biasn_LV Vbiasn2 Biasp
-MM13 net9 Vbiasn2 gnd! gnd! nfet l=nA nfin=nB8
-MM15 Vbiasn2 Vbiasn2 net9 gnd! nfet l=nA nfin=nB8
-MM14 Vbiasn2 Biasp vdd! vdd! pfet l=nA nfin=nB9
+*.PININFO Vbiasn2:O Biasp:I
+MM13 net9 Vbiasn2 gnd! gnd! nfet l=nA nfin=nB9
+MM15 Vbiasn2 Vbiasn2 net9 gnd! nfet l=nA nfin=nB10
+MM14 Vbiasn2 Biasp vdd! vdd! pfet l=nA nfin=nB11
 ends LG_load_biasn_LV
 
 subckt CR5_2 Vbiasn Vbiasp
-MM5 net014 net014 gnd! gnd! nfet l=nA nfin=nB10
-MM4 net15 net014 gnd! gnd! nfet l=nA nfin=nB10
-MM2 Vbiasp Vbiasn net15 gnd! nfet l=nA nfin=nB11
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB11
-MM6 net014 Vbiasp vdd! vdd! pfet l=nA nfin=nB12
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB12
-MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB13
+*.PININFO Vbiasn:O Vbiasp:O
+MM5 net014 net014 gnd! gnd! nfet l=nA nfin=nB12
+MM4 net15 net014 gnd! gnd! nfet l=nA nfin=nB12
+MM2 Vbiasp Vbiasn net15 gnd! nfet l=nA nfin=nB13
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB13
+MM6 net014 Vbiasp vdd! vdd! pfet l=nA nfin=nB14
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB15
+MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB15
 ends CR5_2
 
 VS (gnd! 0) vsource dc=0 type=dc
@@ -50,7 +53,7 @@ VP0 (LG_Vbiasp1 gnd!) vsource dc=lg_vbiasp1 type=dc
 VP1 (LG_Vbiasp2 gnd!) vsource dc=lg_vbiasp2 type=dc
 VN2 (Biasn gnd!) vsource dc=biasn type=dc
 
-xiota LG_Vbiasn LG_Vbiasn1 LG_Vbiasn2 LG_Vbiasp1 LG_Vbiasp2 Vinn Vinp Voutn Voutp Fully_differential_cascode_current_mirror
+xiota LG_Vbiasn LG_Vbiasn1 LG_Vbiasn2 LG_Vbiasp1 LG_Vbiasp2 Vinn Vinp Voutn Voutp fully_differential_cascode_current_mirror
 
 xiLG_load_biasn_LV LG_Vbiasn2 Biasp LG_load_biasn_LV
 

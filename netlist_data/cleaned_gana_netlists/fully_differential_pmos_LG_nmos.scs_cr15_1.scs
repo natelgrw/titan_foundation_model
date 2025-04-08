@@ -1,25 +1,28 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt fully_differential_pmos Vbiasn Vbiasp Vinn Vinp Voutn Voutp
-MM7 Voutp Vinn net12 net16 pfet l=nA nfin=nB0
-MM6 Voutn Vinp net12 net16 pfet l=nA nfin=nB0
-MM5 net12 Vbiasp vdd! vdd! pfet l=nA nfin=nB1
-MM9 Voutp Vbiasn gnd! gnd! nfet l=nA nfin=nB2
-MM8 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB2
+*.PININFO Vbiasn:O Vbiasp:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM7 Voutp Vinn net12 net16 pfet l=nA nfin=nB1
+MM6 Voutn Vinp net12 net16 pfet l=nA nfin=nB1
+MM5 net12 Vbiasp vdd! vdd! pfet l=nA nfin=nB2
+MM9 Voutp Vbiasn gnd! gnd! nfet l=nA nfin=nB3
+MM8 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB3
 ends fully_differential_pmos
 
 subckt LG_nmos Biasp Vbiasn
-MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB3
-MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB3
+*.PININFO Biasp:I Vbiasn:O
+MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB4
+MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB5
 ends LG_nmos
 
 subckt CR15_1 Vbiasp
+*.PININFO Vbiasp:O
 R1 Vbiasp gnd! resistor r=nR0
-MM2 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+MM2 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
 ends CR15_1
 
 VS (gnd! 0) vsource dc=0 type=dc

@@ -1,34 +1,37 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasn1={{lg_vbiasn1}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nC0={{nC0}} nC1={{nC1}} nR0={{nR0}} tempc={{tempc}} vbiasp={{vbiasp}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasn1={{lg_vbiasn1}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nC0={{nC0}} nC1={{nC1}} nR0={{nR0}} tempc={{tempc}} vbiasp={{vbiasp}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
-subckt Fully_differential_miller_compensated_pmos Vbiasn1 Vbiasp Vinn Vinp Voutn Voutp
-MM1 Voutn net21 gnd! gnd! nfet l=nA nfin=nB0
-MM13 Voutp net25 gnd! gnd! nfet l=nA nfin=nB0
-MM9 net25 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB1
-MM8 net21 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB1
-MM0 Voutn Vbiasp vdd! vdd! pfet l=nA nfin=nB2
-MM12 Voutp Vbiasp vdd! vdd! pfet l=nA nfin=nB2
-MM11 net17 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
-MM10 net25 Vinn net17 net28 pfet l=nA nfin=nB4
-MM7 net21 Vinp net17 net28 pfet l=nA nfin=nB4
+subckt fully_differential_miller_compensated_pmos Vbiasn1 Vbiasp Vinn Vinp Voutn Voutp
+*.PININFO Vbiasn1:I Vbiasp:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM1 Voutn net21 gnd! gnd! nfet l=nA nfin=nB1
+MM13 Voutp net25 gnd! gnd! nfet l=nA nfin=nB1
+MM9 net25 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB2
+MM8 net21 Vbiasn1 gnd! gnd! nfet l=nA nfin=nB2
+MM0 Voutn Vbiasp vdd! vdd! pfet l=nA nfin=nB3
+MM12 Voutp Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+MM11 net17 Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+MM10 net25 Vinn net17 net28 pfet l=nA nfin=nB5
+MM7 net21 Vinp net17 net28 pfet l=nA nfin=nB5
 C0 Voutn net21 capacitor c=nC0
 C2 Voutp net25 capacitor c=nC2
-ends Fully_differential_miller_compensated_pmos
+ends fully_differential_miller_compensated_pmos
 
 subckt LG_pmos Biasn Vbiasp
-MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB5
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB5
+*.PININFO Biasn:I Vbiasp:O
+MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB6
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB7
 ends LG_pmos
 
 subckt CR3_2 Vbiasn Vbiasp
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
-MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB6
+*.PININFO Vbiasn:O Vbiasp:O
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB8
+MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB8
 R0 net15 gnd! resistor r=nR0
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB7
-MM2 Vbiasp Vbiasn net15 gnd! nfet l=nA nfin=nB7
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB9
+MM2 Vbiasp Vbiasn net15 gnd! nfet l=nA nfin=nB9
 ends CR3_2
 
 VS (gnd! 0) vsource dc=0 type=dc
@@ -40,7 +43,7 @@ V1 (cm gnd!) vsource dc=vcm type=dc
 VN0 (LG_Vbiasn1 gnd!) vsource dc=lg_vbiasn1 type=dc
 VP0 (Vbiasp gnd!) vsource dc=vbiasp type=dc
 
-xiota LG_Vbiasn1 LG_Vbiasp Vinn Vinp Voutn Voutp Fully_differential_miller_compensated_pmos
+xiota LG_Vbiasn1 LG_Vbiasp Vinn Vinp Voutn Voutp fully_differential_miller_compensated_pmos
 
 xiLG_pmos Biasn LG_Vbiasp LG_pmos
 

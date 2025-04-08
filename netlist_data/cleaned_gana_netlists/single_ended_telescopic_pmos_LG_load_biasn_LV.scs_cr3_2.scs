@@ -1,31 +1,34 @@
 simulator lang=spectre
 global 0
-parameters biasn={{biasn}} lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters biasn={{biasn}} lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt single_ended_telescopic_pmos Vbiasn2 Vbiasp Vinn Vinp Voutp
-MM1 net14 Vbiasn2 net013 gnd! nfet l=nA nfin=nB0
-MM0 Voutp Vbiasn2 net10 gnd! nfet l=nA nfin=nB0
-MM9 net10 net14 gnd! gnd! nfet l=nA nfin=nB1
-MM8 net013 net14 gnd! gnd! nfet l=nA nfin=nB1
-MM5 net12 Vbiasp vdd! vdd! pfet l=nA nfin=nB2
-MM7 Voutp Vinn net12 net19 pfet l=nA nfin=nB3
-MM6 net14 Vinp net12 net19 pfet l=nA nfin=nB3
+*.PININFO Vbiasn2:I Vbiasp:I Vinn:I Vinp:I Voutp:O
+MM1 net14 Vbiasn2 net013 gnd! nfet l=nA nfin=nB1
+MM0 Voutp Vbiasn2 net10 gnd! nfet l=nA nfin=nB1
+MM9 net10 net14 gnd! gnd! nfet l=nA nfin=nB2
+MM8 net013 net14 gnd! gnd! nfet l=nA nfin=nB2
+MM5 net12 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
+MM7 Voutp Vinn net12 net19 pfet l=nA nfin=nB4
+MM6 net14 Vinp net12 net19 pfet l=nA nfin=nB4
 ends single_ended_telescopic_pmos
 
 subckt LG_load_biasn_LV Vbiasn2 Biasp
-MM13 net9 Vbiasn2 gnd! gnd! nfet l=nA nfin=nB4
-MM15 Vbiasn2 Vbiasn2 net9 gnd! nfet l=nA nfin=nB4
-MM14 Vbiasn2 Biasp vdd! vdd! pfet l=nA nfin=nB5
+*.PININFO Vbiasn2:O Biasp:I
+MM13 net9 Vbiasn2 gnd! gnd! nfet l=nA nfin=nB5
+MM15 Vbiasn2 Vbiasn2 net9 gnd! nfet l=nA nfin=nB6
+MM14 Vbiasn2 Biasp vdd! vdd! pfet l=nA nfin=nB7
 ends LG_load_biasn_LV
 
 subckt CR3_2 Vbiasn Vbiasp
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
-MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB6
+*.PININFO Vbiasn:O Vbiasp:O
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB8
+MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB8
 R0 net15 gnd! resistor r=nR0
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB7
-MM2 Vbiasp Vbiasn net15 gnd! nfet l=nA nfin=nB7
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB9
+MM2 Vbiasp Vbiasn net15 gnd! nfet l=nA nfin=nB9
 ends CR3_2
 
 VS (gnd! 0) vsource dc=0 type=dc

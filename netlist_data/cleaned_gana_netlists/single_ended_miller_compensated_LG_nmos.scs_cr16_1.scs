@@ -1,29 +1,32 @@
 simulator lang=spectre
 global 0
-parameters nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nC0={{nC0}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nC0={{nC0}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt single_ended_miller_compensated Vbiasn Vinn Vinp Voutn
-MM6 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB0
-MM3 net011 Vinp net16 gnd! nfet l=nA nfin=nB1
-MM0 net07 Vinn net16 gnd! nfet l=nA nfin=nB1
-MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB2
-MM1 net011 net07 vdd! vdd! pfet l=nA nfin=nB3
-MM2 net07 net07 vdd! vdd! pfet l=nA nfin=nB3
-MM5 Voutn net011 vdd! vdd! pfet l=nA nfin=nB4
+*.PININFO Vbiasn:I Vinn:I Vinp:I Voutn:O
+MM6 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB1
+MM3 net011 Vinp net16 gnd! nfet l=nA nfin=nB2
+MM0 net07 Vinn net16 gnd! nfet l=nA nfin=nB2
+MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB3
+MM1 net011 net07 vdd! vdd! pfet l=nA nfin=nB4
+MM2 net07 net07 vdd! vdd! pfet l=nA nfin=nB4
+MM5 Voutn net011 vdd! vdd! pfet l=nA nfin=nB5
 C0 Voutn net011 capacitor c=nC0
 ends single_ended_miller_compensated
 
 subckt LG_nmos Biasp Vbiasn
-MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB5
+*.PININFO Biasp:I Vbiasn:O
+MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB6
+MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB7
 ends LG_nmos
 
 subckt CR16_1 Vbiasp
+*.PININFO Vbiasp:O
 R0 vdd! net6 resistor r=nR0
 R1 Vbiasp gnd! resistor r=nR1
-MM2 Vbiasp Vbiasp net6 vdd! pfet l=nA nfin=nB6
+MM2 Vbiasp Vbiasp net6 vdd! pfet l=nA nfin=nB8
 ends CR16_1
 
 VS (gnd! 0) vsource dc=0 type=dc

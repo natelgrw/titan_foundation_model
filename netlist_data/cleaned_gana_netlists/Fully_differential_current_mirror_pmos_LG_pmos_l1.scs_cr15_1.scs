@@ -1,31 +1,34 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
-subckt Fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
-MM1 Voutp net13 gnd! gnd! nfet l=nA nfin=nB0
-MM9 net13 net13 gnd! gnd! nfet l=nA nfin=nB0
-MM0 Voutn net19 gnd! gnd! nfet l=nA nfin=nB1
-MM8 net19 net19 gnd! gnd! nfet l=nA nfin=nB1
-MM3 Voutp Vbiasp1 vdd! vdd! pfet l=nA nfin=nB2
-MM2 Voutn Vbiasp1 vdd! vdd! pfet l=nA nfin=nB2
-MM5 net17 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
-MM7 net13 Vinn net17 net24 pfet l=nA nfin=nB4
-MM6 net19 Vinp net17 net24 pfet l=nA nfin=nB4
-ends Fully_differential_current_mirror_pmos
+subckt fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
+*.PININFO Vbiasp:I Vbiasp1:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM1 Voutp net13 gnd! gnd! nfet l=nA nfin=nB1
+MM9 net13 net13 gnd! gnd! nfet l=nA nfin=nB1
+MM0 Voutn net19 gnd! gnd! nfet l=nA nfin=nB2
+MM8 net19 net19 gnd! gnd! nfet l=nA nfin=nB2
+MM3 Voutp Vbiasp1 vdd! vdd! pfet l=nA nfin=nB3
+MM2 Voutn Vbiasp1 vdd! vdd! pfet l=nA nfin=nB3
+MM5 net17 Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+MM7 net13 Vinn net17 net24 pfet l=nA nfin=nB5
+MM6 net19 Vinp net17 net24 pfet l=nA nfin=nB5
+ends fully_differential_current_mirror_pmos
 
 subckt LG_pmos_l1 Biasp Vbiasn Vbiasp
-MM0 Vbiasp Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
-MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB6
+*.PININFO Biasp:I Vbiasn:O Vbiasp:O
+MM0 Vbiasp Vbiasn gnd! gnd! nfet l=nA nfin=nB6
+MM8 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB6
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB7
+MM10 Vbiasn Biasp vdd! vdd! pfet l=nA nfin=nB8
 ends LG_pmos_l1
 
 subckt CR15_1 Vbiasp
+*.PININFO Vbiasp:O
 R1 Vbiasp gnd! resistor r=nR0
-MM2 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB7
+MM2 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB9
 ends CR15_1
 
 VS (gnd! 0) vsource dc=0 type=dc
@@ -37,7 +40,7 @@ V1 (cm gnd!) vsource dc=vcm type=dc
 VP0 (LG_Vbiasp1 gnd!) vsource dc=lg_vbiasp1 type=dc
 VN0 (LG_Vbiasn gnd!) vsource dc=lg_vbiasn type=dc
 
-xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp Fully_differential_current_mirror_pmos
+xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp fully_differential_current_mirror_pmos
 
 xiLG_pmos_l1 Biasp LG_Vbiasn LG_Vbiasp LG_pmos_l1
 

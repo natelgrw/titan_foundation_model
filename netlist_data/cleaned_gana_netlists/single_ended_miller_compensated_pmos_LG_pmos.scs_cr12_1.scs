@@ -1,29 +1,32 @@
 simulator lang=spectre
 global 0
-parameters nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nC0={{nC0}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nC0={{nC0}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt single_ended_miller_compensated_pmos Vbiasp Vinn Vinp Voutp
-MM13 Voutp net38 gnd! gnd! nfet l=nA nfin=nB0
-MM9 net38 net35 gnd! gnd! nfet l=nA nfin=nB0
-MM8 net35 net35 gnd! gnd! nfet l=nA nfin=nB1
-MM12 Voutp Vbiasp vdd! vdd! pfet l=nA nfin=nB2
-MM11 net33 Vbiasp vdd! vdd! pfet l=nA nfin=nB2
-MM10 net38 Vinn net33 net39 pfet l=nA nfin=nB3
-MM7 net35 Vinp net33 net39 pfet l=nA nfin=nB3
+*.PININFO Vbiasp:I Vinn:I Vinp:I Voutp:O
+MM13 Voutp net38 gnd! gnd! nfet l=nA nfin=nB1
+MM9 net38 net35 gnd! gnd! nfet l=nA nfin=nB2
+MM8 net35 net35 gnd! gnd! nfet l=nA nfin=nB2
+MM12 Voutp Vbiasp vdd! vdd! pfet l=nA nfin=nB3
+MM11 net33 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
+MM10 net38 Vinn net33 net39 pfet l=nA nfin=nB4
+MM7 net35 Vinp net33 net39 pfet l=nA nfin=nB4
 C2 Voutp net38 capacitor c=nC2
 ends single_ended_miller_compensated_pmos
 
 subckt LG_pmos Biasn Vbiasp
-MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB4
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+*.PININFO Biasn:I Vbiasp:O
+MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB5
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
 ends LG_pmos
 
 subckt CR12_1 Vbiasn
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM1 net10 Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM2 Vbiasn net10 vdd! vdd! pfet l=nA nfin=nB6
+*.PININFO Vbiasn:O
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB7
+MM1 net10 Vbiasn gnd! gnd! nfet l=nA nfin=nB7
+MM2 Vbiasn net10 vdd! vdd! pfet l=nA nfin=nB8
 RF vdd! Vbiasn resistor r=nR0
 R0 vdd! net10 resistor r=nR1
 ends CR12_1

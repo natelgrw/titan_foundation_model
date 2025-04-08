@@ -1,33 +1,36 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB0={{nB0}} nB10={{nB10}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nC0={{nC0}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nC0={{nC0}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt single_ended_miller_compensated Vbiasn Vinn Vinp Voutn
-MM6 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB0
-MM3 net011 Vinp net16 gnd! nfet l=nA nfin=nB1
-MM0 net07 Vinn net16 gnd! nfet l=nA nfin=nB1
-MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB2
-MM1 net011 net07 vdd! vdd! pfet l=nA nfin=nB3
-MM2 net07 net07 vdd! vdd! pfet l=nA nfin=nB3
-MM5 Voutn net011 vdd! vdd! pfet l=nA nfin=nB4
+*.PININFO Vbiasn:I Vinn:I Vinp:I Voutn:O
+MM6 Voutn Vbiasn gnd! gnd! nfet l=nA nfin=nB1
+MM3 net011 Vinp net16 gnd! nfet l=nA nfin=nB2
+MM0 net07 Vinn net16 gnd! nfet l=nA nfin=nB2
+MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB3
+MM1 net011 net07 vdd! vdd! pfet l=nA nfin=nB4
+MM2 net07 net07 vdd! vdd! pfet l=nA nfin=nB4
+MM5 Voutn net011 vdd! vdd! pfet l=nA nfin=nB5
 C0 Voutn net011 capacitor c=nC0
 ends single_ended_miller_compensated
 
 subckt LG_npmos Biasn Vbiasn Vbiasp
-MM4 Vbiasp Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM10 neta Biasn gnd! gnd! nfet l=nA nfin=nB6
-MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB7
-MM1 Vbiasn neta vdd! vdd! pfet l=nA nfin=nB7
-MM0 neta neta vdd! vdd! pfet l=nA nfin=nB8
+*.PININFO Biasn:I Vbiasn:O Vbiasp:O
+MM4 Vbiasp Vbiasn gnd! gnd! nfet l=nA nfin=nB6
+MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB7
+MM10 neta Biasn gnd! gnd! nfet l=nA nfin=nB8
+MM3 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB9
+MM1 Vbiasn neta vdd! vdd! pfet l=nA nfin=nB10
+MM0 neta neta vdd! vdd! pfet l=nA nfin=nB10
 ends LG_npmos
 
 subckt CR12_1 Vbiasn
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB9
-MM1 net10 Vbiasn gnd! gnd! nfet l=nA nfin=nB9
-MM2 Vbiasn net10 vdd! vdd! pfet l=nA nfin=nB10
+*.PININFO Vbiasn:O
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB11
+MM1 net10 Vbiasn gnd! gnd! nfet l=nA nfin=nB11
+MM2 Vbiasn net10 vdd! vdd! pfet l=nA nfin=nB12
 RF vdd! Vbiasn resistor r=nR0
 R0 vdd! net10 resistor r=nR1
 ends CR12_1

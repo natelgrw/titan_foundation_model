@@ -1,32 +1,35 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasp={{lg_vbiasp}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
-subckt Fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
-MM1 Voutp net13 gnd! gnd! nfet l=nA nfin=nB0
-MM9 net13 net13 gnd! gnd! nfet l=nA nfin=nB0
-MM0 Voutn net19 gnd! gnd! nfet l=nA nfin=nB1
-MM8 net19 net19 gnd! gnd! nfet l=nA nfin=nB1
-MM3 Voutp Vbiasp1 vdd! vdd! pfet l=nA nfin=nB2
-MM2 Voutn Vbiasp1 vdd! vdd! pfet l=nA nfin=nB2
-MM5 net17 Vbiasp vdd! vdd! pfet l=nA nfin=nB3
-MM7 net13 Vinn net17 net24 pfet l=nA nfin=nB4
-MM6 net19 Vinp net17 net24 pfet l=nA nfin=nB4
-ends Fully_differential_current_mirror_pmos
+subckt fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
+*.PININFO Vbiasp:I Vbiasp1:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM1 Voutp net13 gnd! gnd! nfet l=nA nfin=nB1
+MM9 net13 net13 gnd! gnd! nfet l=nA nfin=nB1
+MM0 Voutn net19 gnd! gnd! nfet l=nA nfin=nB2
+MM8 net19 net19 gnd! gnd! nfet l=nA nfin=nB2
+MM3 Voutp Vbiasp1 vdd! vdd! pfet l=nA nfin=nB3
+MM2 Voutn Vbiasp1 vdd! vdd! pfet l=nA nfin=nB3
+MM5 net17 Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+MM7 net13 Vinn net17 net24 pfet l=nA nfin=nB5
+MM6 net19 Vinp net17 net24 pfet l=nA nfin=nB5
+ends fully_differential_current_mirror_pmos
 
 subckt LG_load_biasp_S1 Biasn Vbiasp1
-MM3 Vbiasp1 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB5
-MM0 Vbiasp1 Biasn gnd! gnd! nfet l=nA nfin=nB5
+*.PININFO Biasn:I Vbiasp1:O
+MM3 Vbiasp1 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB6
+MM0 Vbiasp1 Biasn gnd! gnd! nfet l=nA nfin=nB7
 ends LG_load_biasp_S1
 
 subckt CR11_1 Vbiasn
+*.PININFO Vbiasn:O
 RF vdd! Vbiasn resistor r=nR0
-MM1 net9 Vbiasn gnd! gnd! nfet l=nA nfin=nB6
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB6
-MM3 net9 net9 vdd! vdd! pfet l=nA nfin=nB7
-MM2 Vbiasn net9 vdd! vdd! pfet l=nA nfin=nB7
+MM1 net9 Vbiasn gnd! gnd! nfet l=nA nfin=nB8
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB8
+MM3 net9 net9 vdd! vdd! pfet l=nA nfin=nB9
+MM2 Vbiasn net9 vdd! vdd! pfet l=nA nfin=nB9
 ends CR11_1
 
 VS (gnd! 0) vsource dc=0 type=dc
@@ -37,7 +40,7 @@ E0 (Vinn cm in gnd!) vcvs gain=-0.5
 V1 (cm gnd!) vsource dc=vcm type=dc
 VP0 (LG_Vbiasp gnd!) vsource dc=lg_vbiasp type=dc
 
-xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp Fully_differential_current_mirror_pmos
+xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp fully_differential_current_mirror_pmos
 
 xiLG_load_biasp_S1 Biasn LG_Vbiasp1 LG_load_biasp_S1
 

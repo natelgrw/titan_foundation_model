@@ -1,29 +1,34 @@
 simulator lang=spectre
 global 0
-parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nR0={{nR0}} nR1={{nR1}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters lg_vbiasn={{lg_vbiasn}} lg_vbiasp1={{lg_vbiasp1}} nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nR0={{nR0}} nR1={{nR1}} nR2={{nR2}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt fully_differential_cascode Vbiasn Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp
-MM3 Voutn Vinp net16 gnd! nfet l=nA nfin=nB0
-MM0 Voutp Vinn net16 gnd! nfet l=nA nfin=nB0
-MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB1
-MM6 Voutp Vbiasp2 net22 vdd! pfet l=nA nfin=nB2
-MM5 Voutn Vbiasp2 net21 vdd! pfet l=nA nfin=nB2
-MM1 net21 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB3
-MM2 net22 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB3
+*.PININFO Vbiasn:I Vbiasp1:I Vbiasp2:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM3 Voutn Vinp net16 gnd! nfet l=nA nfin=nB1
+MM0 Voutp Vinn net16 gnd! nfet l=nA nfin=nB1
+MM4 net16 Vbiasn gnd! gnd! nfet l=nA nfin=nB2
+MM6 Voutp Vbiasp2 net22 vdd! pfet l=nA nfin=nB3
+MM5 Voutn Vbiasp2 net21 vdd! pfet l=nA nfin=nB3
+MM1 net21 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB4
+MM2 net22 Vbiasp1 vdd! vdd! pfet l=nA nfin=nB4
 ends fully_differential_cascode
 
 subckt LG_load_biasp_LV Biasn Vbiasp2
-MM0 Vbiasp2 Biasn gnd! gnd! nfet l=nA nfin=nB4
-MM3 net8 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB5
-MM1 Vbiasp2 Vbiasp2 net8 vdd! pfet l=nA nfin=nB5
+*.PININFO Biasn:I Vbiasp2:O
+MM0 Vbiasp2 Biasn gnd! gnd! nfet l=nA nfin=nB5
+MM3 net8 Vbiasp2 vdd! vdd! pfet l=nA nfin=nB6
+MM1 Vbiasp2 Vbiasp2 net8 vdd! pfet l=nA nfin=nB7
 ends LG_load_biasp_LV
 
 subckt CR9_1 Vbiasn
-R1 net05 gnd! resistor r=nR0
-RF vdd! Vbiasn resistor r=nR1
-MM0 Vbiasn Vbiasn net05 gnd! nfet l=nA nfin=nB6
+*.PININFO Vbiasn:O
+R0 vdd! net02 resistor r=nR0
+R1 net05 gnd! resistor r=nR1
+RF vdd! Vbiasn resistor r=nR2
+MM0 Vbiasn Vbiasn net05 gnd! nfet l=nA nfin=nB8
+MM1 net02 Vbiasn net05 gnd! nfet l=nA nfin=nB8
 ends CR9_1
 
 VS (gnd! 0) vsource dc=0 type=dc

@@ -1,30 +1,33 @@
 simulator lang=spectre
 global 0
-parameters nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+parameters nA={{nA}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
 
 subckt fully_differential Vbiasn Vbiasp Vinn Vinp Voutn Voutp
-MM1 Voutn Vbiasp vdd! vdd! pfet l=nA nfin=nB0
-MM2 Voutp Vbiasp vdd! vdd! pfet l=nA nfin=nB0
-MM4 net14 Vbiasn gnd! gnd! nfet l=nA nfin=nB1
-MM3 Voutn Vinp net14 gnd! nfet l=nA nfin=nB2
-MM0 Voutp Vinn net14 gnd! nfet l=nA nfin=nB2
+*.PININFO Vbiasn:I Vbiasp:I Vinn:I Vinp:I Voutn:O Voutp:O
+MM1 Voutn Vbiasp vdd! vdd! pfet l=nA nfin=nB1
+MM2 Voutp Vbiasp vdd! vdd! pfet l=nA nfin=nB1
+MM4 net14 Vbiasn gnd! gnd! nfet l=nA nfin=nB2
+MM3 Voutn Vinp net14 gnd! nfet l=nA nfin=nB3
+MM0 Voutp Vinn net14 gnd! nfet l=nA nfin=nB3
 ends fully_differential
 
 subckt LG_nmos_l1 Biasn Vbiasn Vbiasp
-MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB3
-MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB3
-MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB4
-MM0 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB4
+*.PININFO Biasn:I Vbiasn:O Vbiasp:O
+MM2 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB4
+MM10 Vbiasp Biasn gnd! gnd! nfet l=nA nfin=nB5
+MM1 Vbiasn Vbiasp vdd! vdd! pfet l=nA nfin=nB6
+MM0 Vbiasp Vbiasp vdd! vdd! pfet l=nA nfin=nB6
 ends LG_nmos_l1
 
 subckt CR11_1 Vbiasn
+*.PININFO Vbiasn:O
 RF vdd! Vbiasn resistor r=nR0
-MM1 net9 Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB5
-MM3 net9 net9 vdd! vdd! pfet l=nA nfin=nB6
-MM2 Vbiasn net9 vdd! vdd! pfet l=nA nfin=nB6
+MM1 net9 Vbiasn gnd! gnd! nfet l=nA nfin=nB7
+MM0 Vbiasn Vbiasn gnd! gnd! nfet l=nA nfin=nB7
+MM3 net9 net9 vdd! vdd! pfet l=nA nfin=nB8
+MM2 Vbiasn net9 vdd! vdd! pfet l=nA nfin=nB8
 ends CR11_1
 
 VS (gnd! 0) vsource dc=0 type=dc
