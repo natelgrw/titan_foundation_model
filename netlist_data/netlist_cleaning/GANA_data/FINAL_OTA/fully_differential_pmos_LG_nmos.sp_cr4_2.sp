@@ -32,32 +32,32 @@
 
 .SUBCKT fully_differential_pmos Vbiasn Vbiasp Vinn Vinp Voutn Voutp
 *.PININFO Vbiasn:O Vbiasp:I Vinn:I Vinp:I Voutn:O Voutp:O
-MM7 Voutp Vinn net12 net16 pmos w=WA l=LA nfin=nA
-MM6 Voutn Vinp net12 net16 pmos w=WA l=LA nfin=nA
-MM5 net12 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM9 Voutp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM8 Voutn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+MM7 Voutp Vinn net12 net16 pmos w=WA l=LA nfin=nA1
+MM6 Voutn Vinp net12 net16 pmos w=WA l=LA nfin=nA1
+MM5 net12 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
+MM9 Voutp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA3
+MM8 Voutn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA3
 .ENDS
 
 
 .SUBCKT LG_nmos Biasp Vbiasn
 *.PININFO Biasp:I Vbiasn:O
-MM8 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 Vbiasn Biasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM8 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM10 Vbiasn Biasp vdd! vdd! pmos w=WA l=LA nfin=nA2
 .ENDS
 
 .SUBCKT CR4_2 Vbiasn Vbiasp
 *.PININFO Vbiasn:O Vbiasp:O
-MM11 net023 net024 Vbiasn gnd! nmos w=27.0n l=LA nfin=nA
-MM8 net025 net010 net023 gnd! nmos w=27.0n l=LA nfin=nA
-MM9 net024 net024 net023 gnd! nmos w=27.0n l=LA nfin=nA
-MM7 net010 net010 net025 gnd! nmos w=WA l=LA nfin=nA
-MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM0 Vbiasp net025 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 net024 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM4 net010 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM3 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM11 net023 net024 Vbiasn gnd! nmos w=27.0n l=LA nfin=nA1
+MM8 net025 net010 net023 gnd! nmos w=27.0n l=LA nfin=nA2
+MM9 net024 net024 net023 gnd! nmos w=27.0n l=LA nfin=nA3
+MM7 net010 net010 net025 gnd! nmos w=WA l=LA nfin=nA4
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA5
+MM0 Vbiasp net025 gnd! gnd! nmos w=WA l=LA nfin=nA6
+MM10 net024 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA7
+MM4 net010 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA8
+MM3 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA7
+MM1 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA9
 .ENDS
 
 

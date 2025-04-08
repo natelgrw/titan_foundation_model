@@ -33,6 +33,6 @@
 .SUBCKT CR15_1 Vbiasp
 *.PININFO Vbiasp:O
 RR1 Vbiasp gnd! res=rK
-MM2 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM2 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA1
 .ENDS
 

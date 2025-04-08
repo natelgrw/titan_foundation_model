@@ -32,29 +32,31 @@
 
 .SUBCKT single_ended_miller_compensated_pmos Vbiasp Vinn Vinp Voutp
 *.PININFO Vbiasp:I Vinn:I Vinp:I Voutp:O
-MM13 Voutp net38 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM9 net38 net35 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM8 net35 net35 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM12 Voutp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM11 net33 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM10 net38 Vinn net33 net39 pmos w=WA l=LA nfin=nA
-MM7 net35 Vinp net33 net39 pmos w=WA l=LA nfin=nA
+MM13 Voutp net38 gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM9 net38 net35 gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM8 net35 net35 gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM12 Voutp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA3
+MM11 net33 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA3
+MM10 net38 Vinn net33 net39 pmos w=WA l=LA nfin=nA4
+MM7 net35 Vinp net33 net39 pmos w=WA l=LA nfin=nA4
 CC2 Voutp net38 1p
 .ENDS
 
 
 .SUBCKT LG_nmos_l1 Biasn Vbiasn Vbiasp
 *.PININFO Biasn:I Vbiasn:O Vbiasp:O
-MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM0 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA3
+MM0 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA3
 .ENDS
 
 .SUBCKT CR1_1 Vbiasn
 *.PININFO Vbiasn:O
 RRF vdd! Vbiasn res=rK
-MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+RR0 vdd! net02 res=rK
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM1 net02 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
 .ENDS
 
 

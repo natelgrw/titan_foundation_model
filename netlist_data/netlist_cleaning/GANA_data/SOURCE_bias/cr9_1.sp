@@ -32,8 +32,9 @@
 
 .SUBCKT CR9_1 Vbiasn
 *.PININFO Vbiasn:O
+RR0 vdd! net02 res=rK
 RR1 net05 gnd! res=rK
 RRF vdd! Vbiasn res=rK
-MM0 Vbiasn Vbiasn net05 gnd! nmos w=WA l=LA nfin=nA
+MM0 Vbiasn Vbiasn net05 gnd! nmos w=WA l=LA nfin=nA1
+MM1 net02 Vbiasn net05 gnd! nmos w=WA l=LA nfin=nA1
 .ENDS
-

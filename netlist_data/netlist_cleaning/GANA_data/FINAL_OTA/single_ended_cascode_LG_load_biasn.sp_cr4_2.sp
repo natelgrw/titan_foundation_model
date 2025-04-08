@@ -32,39 +32,39 @@
 
 .SUBCKT single_ended_cascode Vbiasn1 Vbiasn2 Vbiasp1 Vbiasp2 Vinn Vinp Voutn
 *.PININFO Vbiasn1:I Vbiasn2:I Vbiasp1:I Vbiasp2:I Vinn:I Vinp:I Voutn:O
-MM10 net27 net12 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM9 net21 net12 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM8 net12 Vbiasn2 net27 gnd! nmos w=WA l=LA nfin=nA
-MM7 Voutn Vbiasn2 net21 gnd! nmos w=WA l=LA nfin=nA
-MM3 net32 Vinp net10 gnd! nmos w=WA l=LA nfin=nA
-MM0 net26 Vinn net10 gnd! nmos w=WA l=LA nfin=nA
-MM4 net10 Vbiasn1 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM6 net12 Vbiasp2 net26 vdd! pmos w=WA l=LA nfin=nA
-MM5 Voutn Vbiasp2 net32 vdd! pmos w=WA l=LA nfin=nA
-MM1 net32 Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA
-MM2 net26 Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA
+MM10 net27 net12 gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM9 net21 net12 gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM8 net12 Vbiasn2 net27 gnd! nmos w=WA l=LA nfin=nA2
+MM7 Voutn Vbiasn2 net21 gnd! nmos w=WA l=LA nfin=nA2
+MM3 net32 Vinp net10 gnd! nmos w=WA l=LA nfin=nA3
+MM0 net26 Vinn net10 gnd! nmos w=WA l=LA nfin=nA3
+MM4 net10 Vbiasn1 gnd! gnd! nmos w=WA l=LA nfin=nA4
+MM6 net12 Vbiasp2 net26 vdd! pmos w=WA l=LA nfin=nA5
+MM5 Voutn Vbiasp2 net32 vdd! pmos w=WA l=LA nfin=nA5
+MM1 net32 Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA6
+MM2 net26 Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA6
 .ENDS
 
 
 .SUBCKT LG_load_biasn Vbiasn1 Vbiasn2 Biasp
 *.PININFO Vbiasn1:O Vbiasn2:O Biasp:I 
-MM15 Vbiasn2 Vbiasn2 Vbiasn1 gnd! nmos w=WA l=LA nfin=nA
-MM13 Vbiasn1 Vbiasn1 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM14 Vbiasn2 Biasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM15 Vbiasn2 Vbiasn2 Vbiasn1 gnd! nmos w=WA l=LA nfin=nA1
+MM13 Vbiasn1 Vbiasn1 gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM14 Vbiasn2 Biasp vdd! vdd! pmos w=WA l=LA nfin=nA3
 .ENDS
 
 .SUBCKT CR4_2 Vbiasn Vbiasp
 *.PININFO Vbiasn:O Vbiasp:O
-MM11 net023 net024 Vbiasn gnd! nmos w=27.0n l=LA nfin=nA
-MM8 net025 net010 net023 gnd! nmos w=27.0n l=LA nfin=nA
-MM9 net024 net024 net023 gnd! nmos w=27.0n l=LA nfin=nA
-MM7 net010 net010 net025 gnd! nmos w=WA l=LA nfin=nA
-MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM0 Vbiasp net025 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 net024 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM4 net010 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM3 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM11 net023 net024 Vbiasn gnd! nmos w=27.0n l=LA nfin=nA1
+MM8 net025 net010 net023 gnd! nmos w=27.0n l=LA nfin=nA2
+MM9 net024 net024 net023 gnd! nmos w=27.0n l=LA nfin=nA3
+MM7 net010 net010 net025 gnd! nmos w=WA l=LA nfin=nA4
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA5
+MM0 Vbiasp net025 gnd! gnd! nmos w=WA l=LA nfin=nA6
+MM10 net024 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA7
+MM4 net010 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA8
+MM3 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA7
+MM1 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA9
 .ENDS
 
 

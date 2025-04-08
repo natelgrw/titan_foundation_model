@@ -32,33 +32,33 @@
 
 .SUBCKT single_ended_miller_compensated Vbiasn Vinn Vinp Voutn
 *.PININFO Vbiasn:I Vinn:I Vinp:I Voutn:O
-MM6 Voutn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 net011 Vinp net16 gnd! nmos w=WA l=LA nfin=nA
-MM0 net07 Vinn net16 gnd! nmos w=WA l=LA nfin=nA
-MM4 net16 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM1 net011 net07 vdd! vdd! pmos w=WA l=LA nfin=nA
-MM2 net07 net07 vdd! vdd! pmos w=WA l=LA nfin=nA
-MM5 Voutn net011 vdd! vdd! pmos w=WA l=LA nfin=nA
+MM6 Voutn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM3 net011 Vinp net16 gnd! nmos w=WA l=LA nfin=nA2
+MM0 net07 Vinn net16 gnd! nmos w=WA l=LA nfin=nA2
+MM4 net16 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA3
+MM1 net011 net07 vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM2 net07 net07 vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM5 Voutn net011 vdd! vdd! pmos w=WA l=LA nfin=nA5
 CC0 Voutn net011 1p
 .ENDS
 
 
 .SUBCKT LG_npmos Biasn Vbiasn Vbiasp
 *.PININFO Biasn:I Vbiasn:O Vbiasp:O
-MM4 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 neta Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasn neta vdd! vdd! pmos w=WA l=LA nfin=nA
-MM0 neta neta vdd! vdd! pmos w=WA l=LA nfin=nA
+MM4 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM10 neta Biasn gnd! gnd! nmos w=WA l=LA nfin=nA3
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM1 Vbiasn neta vdd! vdd! pmos w=WA l=LA nfin=nA5
+MM0 neta neta vdd! vdd! pmos w=WA l=LA nfin=nA5
 .ENDS
 
 .SUBCKT CR13_2 Vbiasn Vbiasp
 *.PININFO Vbiasn:O Vbiasp:O
-MM2 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM2 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
+MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
 .ENDS
 
 

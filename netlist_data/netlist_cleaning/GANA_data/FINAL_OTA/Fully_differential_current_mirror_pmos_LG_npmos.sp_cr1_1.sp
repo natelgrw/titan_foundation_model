@@ -2,7 +2,7 @@
 * auCdl Netlist:
 * 
 * Library Name:  OTA_class
-* Top Cell Name: Fully_differential_current_mirror_pmos
+* Top Cell Name: fully_differential_current_mirror_pmos
 * View Name:     schematic
 * Netlisted on:  Sep 11 21:02:54 2019
 ************************************************************************
@@ -26,42 +26,44 @@
 
 ************************************************************************
 * Library Name: OTA_class
-* Cell Name:    Fully_differential_current_mirror_pmos
+* Cell Name:    fully_differential_current_mirror_pmos
 * View Name:    schematic
 ************************************************************************
 
-.SUBCKT Fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
+.SUBCKT fully_differential_current_mirror_pmos Vbiasp Vbiasp1 Vinn Vinp Voutn Voutp
 *.PININFO Vbiasp:I Vbiasp1:I Vinn:I Vinp:I Voutn:O Voutp:O
-MM1 Voutp net13 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM9 net13 net13 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM0 Voutn net19 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM8 net19 net19 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Voutp Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA
-MM2 Voutn Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA
-MM5 net17 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM7 net13 Vinn net17 net24 pmos w=WA l=LA nfin=nA
-MM6 net19 Vinp net17 net24 pmos w=WA l=LA nfin=nA
+MM1 Voutp net13 gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM9 net13 net13 gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM0 Voutn net19 gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM8 net19 net19 gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM3 Voutp Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA3
+MM2 Voutn Vbiasp1 vdd! vdd! pmos w=WA l=LA nfin=nA3
+MM5 net17 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM7 net13 Vinn net17 net24 pmos w=WA l=LA nfin=nA5
+MM6 net19 Vinp net17 net24 pmos w=WA l=LA nfin=nA5
 .ENDS
 
 
 .SUBCKT LG_npmos Biasn Vbiasn Vbiasp
 *.PININFO Biasn:I Vbiasn:O Vbiasp:O
-MM4 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 neta Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasn neta vdd! vdd! pmos w=WA l=LA nfin=nA
-MM0 neta neta vdd! vdd! pmos w=WA l=LA nfin=nA
+MM4 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM10 neta Biasn gnd! gnd! nmos w=WA l=LA nfin=nA3
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM1 Vbiasn neta vdd! vdd! pmos w=WA l=LA nfin=nA5
+MM0 neta neta vdd! vdd! pmos w=WA l=LA nfin=nA5
 .ENDS
 
 .SUBCKT CR1_1 Vbiasn
 *.PININFO Vbiasn:O
 RRF vdd! Vbiasn res=rK
-MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+RR0 vdd! net02 res=rK
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM1 net02 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
 .ENDS
 
 
-xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp Fully_differential_current_mirror_pmos
+xiota LG_Vbiasp LG_Vbiasp1 Vinn Vinp Voutn Voutp fully_differential_current_mirror_pmos
 xiLG_npmos Biasn LG_Vbiasn LG_Vbiasp LG_npmos
 xibCR1_1 Biasn CR1_1
 .END

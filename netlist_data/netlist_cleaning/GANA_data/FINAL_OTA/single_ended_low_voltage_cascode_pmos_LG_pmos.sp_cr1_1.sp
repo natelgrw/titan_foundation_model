@@ -32,26 +32,28 @@
 
 .SUBCKT single_ended_low_voltage_cascode_pmos Vbiasp Vinn Vinp Voutp
 *.PININFO Vbiasp:I Vinn:I Vinp:I Voutp:O
-MM7 Voutp Vinn net11 net18 pmos w=WA l=LA nfin=nA
-MM6 net13 Vinp net11 net18 pmos w=WA l=LA nfin=nA
-MM5 net11 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Voutp net17 net20 gnd! nmos w=WA l=LA nfin=nA
-MM0 net13 net17 net19 gnd! nmos w=WA l=LA nfin=nA
-MM9 net20 net13 gnd! gnd! nmos w=WA l=LA nfin=nA
-MM8 net19 net13 gnd! gnd! nmos w=WA l=LA nfin=nA
+MM7 Voutp Vinn net11 net18 pmos w=WA l=LA nfin=nA1
+MM6 net13 Vinp net11 net18 pmos w=WA l=LA nfin=nA1
+MM5 net11 Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
+MM1 Voutp net17 net20 gnd! nmos w=WA l=LA nfin=nA3
+MM0 net13 net17 net19 gnd! nmos w=WA l=LA nfin=nA3
+MM9 net20 net13 gnd! gnd! nmos w=WA l=LA nfin=nA4
+MM8 net19 net13 gnd! gnd! nmos w=WA l=LA nfin=nA4
 .ENDS
 
 
 .SUBCKT LG_pmos Biasn Vbiasp
 *.PININFO Biasn:I Vbiasp:O
-MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
 .ENDS
 
 .SUBCKT CR1_1 Vbiasn
 *.PININFO Vbiasn:O
 RRF vdd! Vbiasn res=rK
-MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
+RR0 vdd! net02 res=rK
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM1 net02 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
 .ENDS
 
 

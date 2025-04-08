@@ -32,7 +32,7 @@
 
 .SUBCKT LG_pmos Biasn Vbiasp
 *.PININFO Biasn:I Vbiasp:O
-MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM10 Vbiasp Biasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
 .ENDS
 

@@ -32,32 +32,32 @@
 
 .SUBCKT single_ended_low_voltage_cascode_current_mirror Vbiasn Vinn Vinp Voutp
 *.PININFO Vbiasn:I Vinn:I Vinp:I Voutp:O
-MM3 Voutp Vinp net13 gnd! nmos w=WA l=LA nfin=nA
-MM0 net11 Vinn net13 gnd! nmos w=WA l=LA nfin=nA
-MM4 net13 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM6 net11 net18 net19 vdd! pmos w=WA l=LA nfin=nA
-MM5 Voutp net18 net20 vdd! pmos w=WA l=LA nfin=nA
-MM1 net20 net11 vdd! vdd! pmos w=WA l=LA nfin=nA
-MM2 net19 net11 vdd! vdd! pmos w=WA l=LA nfin=nA
+MM3 Voutp Vinp net13 gnd! nmos w=WA l=LA nfin=nA1
+MM0 net11 Vinn net13 gnd! nmos w=WA l=LA nfin=nA1
+MM4 net13 Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM6 net11 net18 net19 vdd! pmos w=WA l=LA nfin=nA3
+MM5 Voutp net18 net20 vdd! pmos w=WA l=LA nfin=nA3
+MM1 net20 net11 vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM2 net19 net11 vdd! vdd! pmos w=WA l=LA nfin=nA4
 .ENDS
 
 
 .SUBCKT LG_npmos Biasn Vbiasn Vbiasp
 *.PININFO Biasn:I Vbiasn:O Vbiasp:O
-MM4 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM10 neta Biasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasn neta vdd! vdd! pmos w=WA l=LA nfin=nA
-MM0 neta neta vdd! vdd! pmos w=WA l=LA nfin=nA
+MM4 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM2 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM10 neta Biasn gnd! gnd! nmos w=WA l=LA nfin=nA3
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA4
+MM1 Vbiasn neta vdd! vdd! pmos w=WA l=LA nfin=nA5
+MM0 neta neta vdd! vdd! pmos w=WA l=LA nfin=nA5
 .ENDS
 
 .SUBCKT CR13_2 Vbiasn Vbiasp
 *.PININFO Vbiasn:O Vbiasp:O
-MM2 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM2 Vbiasp Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA1
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
+MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA2
 .ENDS
 
 

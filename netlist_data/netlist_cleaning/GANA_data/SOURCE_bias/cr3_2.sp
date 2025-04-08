@@ -32,10 +32,10 @@
 
 .SUBCKT CR3_2 Vbiasn Vbiasp
 *.PININFO Vbiasn:O Vbiasp:O
-MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
-MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA
+MM3 Vbiasp Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA1
+MM1 Vbiasn Vbiasp vdd! vdd! pmos w=WA l=LA nfin=nA1
 RR0 net15 gnd! res=rK
-MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA
-MM2 Vbiasp Vbiasn net15 gnd! nmos w=WA l=LA nfin=nA
+MM0 Vbiasn Vbiasn gnd! gnd! nmos w=WA l=LA nfin=nA2
+MM2 Vbiasp Vbiasn net15 gnd! nmos w=WA l=LA nfin=nA2
 .ENDS
 
