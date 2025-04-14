@@ -15,7 +15,8 @@ import re
 
 #import psutil
 
-SCS_FILE_PATH = "/homes/hhussein/Desktop/cleaned_netlists/single_ended_cascode_current_mirror_LG_load_biasn_LV.scs_cr2_2.scs"
+MINI_PATH = "/cleaned_gana_netlists/single_ended_cascode_current_mirror_LG_load_biasn_LV.scs_cr2_2.scs"
+SCS_FILE_PATH = f"/homes/natelgrw/Documents/turbo_circuit_optimizer/netlist_data{MINI_PATH}"
 
 np.random.seed(1299)
 
@@ -186,26 +187,26 @@ class Levy:
         reward1 = self.reward(cur_specs,self.specs_ideal,self.specs_id)
 
         if globalsy.counterrrr < 200:
-                f = open("/homes/hhussein/Desktop/out1.txt",'a')
+                f = open("/homes/natelgrw/Documents/out1.txt",'a')
                 for ordered_dict in param_val:
                     formatted_items = [f"{k}: {format(v, '.3g')}" for k, v in ordered_dict.items()]
                     print(", ".join(formatted_items), file=f)
                 f.close()
         elif globalsy.counterrrr < 1200:
-                f = open("/homes/hhussein/Desktop/out11.txt",'a')
+                f = open("/homes/natelgrw/Documents/out11.txt",'a')
                 for ordered_dict in param_val:
                     formatted_items = [f"{k}: {format(v, '.3g')}" for k, v in ordered_dict.items()]
                     print(", ".join(formatted_items), file=f)
                 f.close()
         elif globalsy.counterrrr < 2000:
-                f = open("/homes/hhussein/Desktop/out12.txt",'a')
+                f = open("/homes/natelgrw/Documents/out12.txt",'a')
                 for ordered_dict in param_val:
                     formatted_items = [f"{k}: {format(v, '.3g')}" for k, v in ordered_dict.items()]
                     print(", ".join(formatted_items), file=f)
                 f.close()
 
         if globalsy.counterrrr < 200:
-                f = open("/homes/hhussein/Desktop/out1.txt",'a')
+                f = open("/homes/natelgrw/Documents/out1.txt",'a')
                 for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
@@ -213,7 +214,7 @@ class Levy:
                 f.close()
                 globalsy.counterrrr=globalsy.counterrrr+1
         elif globalsy.counterrrr < 1200:
-                f = open("/homes/hhussein/Desktop/out11.txt",'a')
+                f = open("/homes/natelgrw/Documents/out11.txt",'a')
                 for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
@@ -221,7 +222,7 @@ class Levy:
                 f.close()
                 globalsy.counterrrr=globalsy.counterrrr+1
         elif globalsy.counterrrr < 2000:
-                f = open("/homes/hhussein/Desktop/out12.txt",'a')
+                f = open("/homes/natelgrw/Documents/out12.txt",'a')
                 for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
