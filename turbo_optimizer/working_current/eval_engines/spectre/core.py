@@ -250,8 +250,6 @@ class EvaluationEngine(object):
             print("not valid designs:" + str(nvalid_designs))
         return valid_designs[:n]
 
-   
-
     def evaluate(self, design_list, debug=True, parallel_config=None):
         """
         serial implementation of evaluate (not parallel)
