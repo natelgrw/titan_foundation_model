@@ -1,9 +1,7 @@
 import numpy as np
 from collections import OrderedDict
-import yaml
-import yaml.constructor
-from turbo.turbo import Turbo1
-from turbo.turbo import TurboM
+from turbo.turbo.turbo_1 import Turbo1
+from turbo.turbo.turbo_m import TurboM
 import numpy as np
 import torch
 import math
@@ -52,10 +50,7 @@ shared_ranges = {
     'vbiasp': (0, 0.8),
     'vbiasn': (0, 0.8),
     'rr': (1e2, 1e8),
-    'cc': (1e-15, 1e-11),
-    'vcm': (0.40, 0.40),
-    'vdd': (0.8, 0.8),
-    'tempc': (27, 27)
+    'cc': (1e-15, 1e-11)
 }
 
 def extract_parameter_names(scs_file):
@@ -64,6 +59,9 @@ def extract_parameter_names(scs_file):
             if line.strip().startswith("parameters"):
                 # extracting all names before '='
                 matches = re.findall(r'(\w+)=', line)
+                matches.remove("vcm")
+                matches.remove("vdd")
+                matches.remove("tempc")
                 return matches
     return []
     
@@ -96,14 +94,10 @@ def build_bounds(params_id, shared_ranges):
             low, high = shared_ranges['vbiasp']
         elif "biasn" in pname:
             low, high = shared_ranges['vbiasn']
-        elif pname == "cc":
+        elif pname.startswith("nC"):
             low, high = shared_ranges['cc']
-        elif pname == "vcm":
-            low, high = shared_ranges['vcm']
-        elif pname == "vdd":
-            low, high = shared_ranges['vdd']
-        elif pname == "tempc":
-            low, high = shared_ranges['tempc']
+        elif pname.startswith("nR"):
+            low, high = shared_ranges['rr']
         else:
             raise ValueError(f"Unknown parameter: {pname}")
         lb.append(low)

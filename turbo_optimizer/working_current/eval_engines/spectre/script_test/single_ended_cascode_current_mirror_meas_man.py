@@ -149,15 +149,15 @@ class ACTB(object):
         phm = cls.find_phm(freq, vout)
         power = -dc_results['V0:p']
         if globalsy.counterrrr < 200:
-                f = open("/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/out1.txt",'a')
+                f = open("/homes/natelgrw/Documents/out1.txt",'a')
                 print("metrics-", "gain: ", f'{float(gain):.3}', ", UGBW: ",  f'{float(ugbw):.3}', ", PM: ",  f'{float(phm):.3}', ", power: ", f'{float(power):.3}', valid, file=f)
                 f.close()
         elif globalsy.counterrrr < 1200:
-                f = open("/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/out11.txt",'a')
+                f = open("/homes/natelgrw/Documents/out11.txt",'a')
                 print("metrics-", "gain: ", f'{float(gain):.3}', ", UGBW: ",  f'{float(ugbw):.3}', ", PM: ",  f'{float(phm):.3}', ", power: ", f'{float(power):.3}', valid, file=f)
                 f.close()
         elif globalsy.counterrrr < 2000:
-                f = open("/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/out12.txt",'a')
+                f = open("/homes/natelgrw/Documents/out12.txt",'a')
                 print("metrics-", "gain: ", f'{float(gain):.3}', ", UGBW: ",  f'{float(ugbw):.3}', ", PM: ",  f'{float(phm):.3}', ", power: ", f'{float(power):.3}', valid, file=f)
                 f.close()
         results = dict(
@@ -233,7 +233,7 @@ class ACTB(object):
 
 if __name__ == '__main__':
 
-    yname = '/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/specs_test/single_ended_cascode_current_mirror.yaml'
+    yname = '/homes/natelgrw/Documents/turbo_circuit_optimizer/turbo_optimizer/working_current/eval_engines/specs_test/single_ended_cascode_current_mirror.yaml'
     eval_core = OpampMeasMan(yname)
 
     designs = eval_core.generate_data_set(n=1)
