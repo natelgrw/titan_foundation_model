@@ -229,7 +229,9 @@ class Levy:
         return val
 
 params_id = extract_parameter_names(SCS_FILE_PATH)
+print(params_id)
 lb, ub = build_bounds(params_id, shared_ranges)
+print(params_id)
 f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb)
 
 turbo1 = Turbo1(
