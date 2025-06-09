@@ -7,8 +7,10 @@ simulation in a Cadence Spectre environment. It is important to modify
 the absolute path name of the netlist to match your computer system, or 
 else netlist simulation will not work.
 
-Author: natelgrw
-Created: 2/23/2025
+@author: natelgrw
+
+Created: 02/23/2025
+Last Edited: 06/02/2025
 """
 import os
 from collections import Counter

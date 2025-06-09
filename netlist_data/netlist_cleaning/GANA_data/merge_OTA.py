@@ -1,14 +1,15 @@
 """
-Created on Tue Oct 22 21:06:36 2019
-
-@author: kunal001
-
-Revised on Mon Jan 27 18:38:14 2025
-
-@editor: natelgrw
+merge_OTA.py
 
 A python script for assembling combinations of GANA netlists. 
 Writes assembled netlists to FULL_OTA.
+
+@author: kunal001
+@editor: natelgrw
+
+Created 10/22/2019
+Revised 01/27/2025
+
 """
 
 # !/usr/bin/env python3

@@ -34,10 +34,10 @@ region_mapping = {
 
 # TODO: clarify target specs/purpose of code, this can change!
 specs_dict = {
-    "gain": 1680.0,
-    "UGBW": 3.49e9,
-    "PM": -117.0,
-    "power": 5.85e-7
+    "gain": 1680.0,        # ~64.5 dB
+    "UGBW": 3e6,           # 3 MHz
+    "PM": 60.0,            # Phase Margin
+    "power": 10e-6         # 10 µW
 }
 
 specs_id = list(specs_dict.keys())
@@ -45,12 +45,12 @@ specs_ideal = list(specs_dict.values())
 
 #shared ranges to make new bound list
 shared_ranges = {
-    'nA': (10e-9, 40e-9),
-    'nB': (1, 200),
-    'vbiasp': (0, 0.8),
-    'vbiasn': (0, 0.8),
-    'rr': (1e2, 1e8),
-    'cc': (1e-15, 1e-11)
+    'nA': (40e-9, 100e-9),
+    'nB': (5, 100),
+    'vbiasp': (0.4, 0.8),
+    'vbiasn': (0.2, 0.8),
+    'rr': (1e4, 1e8),
+    'cc': (0.3e-12, 3e-12)
 }
 
 def extract_parameter_names(scs_file):
