@@ -184,7 +184,7 @@ class EvaluationEngine(object):
 
         self.design_specs_fname = yaml_fname
         with open(yaml_fname, 'r') as f:
-            self.ver_specs = yaml.load(f, Loader=yaml.UnsafeLoader)
+            self.ver_specs = yaml.load(f, Loader=yaml.Loader)
             print("DEBUG ver_specs =", type(self.ver_specs), self.ver_specs)
         f.close()
 

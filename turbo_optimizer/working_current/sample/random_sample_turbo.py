@@ -13,17 +13,20 @@ import re
 
 #import psutil
 
-MINI_PATH = "/cleaned_gana_netlists/single_ended_cascode_current_mirror_LG_load_biasn_LV.scs_cr2_2.scs"
-SCS_FILE_PATH = f"/homes/natelgrw/Documents/turbo_circuit_optimizer/netlist_data{MINI_PATH}"
+SCS_MINI_PATH = "/cleaned_template_netlists/single_ended_cascode_current_mirror.scs"
+SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/netlist_data{SCS_MINI_PATH}"
 
-np.random.seed(1299)
+YAML_MINI_PATH = "/single_ended_cascode_current_mirror.yaml"
+YAML_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/turbo_optimizer/working_current/eval_engines/spectre/specs_test{YAML_MINI_PATH}"
 
-# constant values
-vcm = 0.40
-vdd = 0.8
+np.random.seed(2000)
+
+# constant parameter values
+vcm = 0.35
+vdd = 0.70
 tempc = 27
 
-# TODO: clarify target specs/purpose of code!
+# transistor power states
 region_mapping = {
     0: "cut-off",
     1: "triode",
@@ -32,25 +35,25 @@ region_mapping = {
     4: "breakdown"
 }
 
-# TODO: clarify target specs/purpose of code, this can change!
+# netlist target specifications
 specs_dict = {
-    "gain": 1680.0,        # ~64.5 dB
-    "UGBW": 3e6,           # 3 MHz
-    "PM": 60.0,            # Phase Margin
-    "power": 10e-6         # 10 µW
+    "gain": 1.0e5,          # target gain of ~80 dB
+    "UGBW": 1.0e7,          # target UGBW of 10 MHz
+    "PM": 60.0,             # phase margin of 65 degrees for stability
+    "power": 1.0e-6         # power consumption at 10 µW
 }
 
 specs_id = list(specs_dict.keys())
 specs_ideal = list(specs_dict.values())
 
-#shared ranges to make new bound list
+# shared ranges to make new bound list
 shared_ranges = {
-    'nA': (40e-9, 100e-9),
-    'nB': (5, 100),
-    'vbiasp': (0.4, 0.8),
-    'vbiasn': (0.2, 0.8),
-    'rr': (1e4, 1e8),
-    'cc': (0.3e-12, 3e-12)
+    'nA': (10e-9, 30e-9),  
+    'nB': (1, 15),
+    'vbiasp': (0.45, 0.75),
+    'vbiasn': (0.25, 0.75),
+    'rr': (5e3, 1e7),
+    'cc': (0.1e-12, 2.5e-12)
 }
 
 def extract_parameter_names(scs_file):
@@ -148,7 +151,7 @@ class Levy:
         # val = np.sin(np.pi * w[0]) ** 2 + \
         #     np.sum((w[1:self.dim - 1] - 1) ** 2 * (1 + 10 * np.sin(np.pi * w[1:self.dim - 1] + 1) ** 2)) + \
         #     (w[self.dim - 1] - 1) ** 2 * (1 + np.sin(2 * np.pi * w[self.dim - 1])**2)
-        sim_env = OpampMeasMan(SCS_FILE_PATH)
+        sim_env = OpampMeasMan(YAML_FILE_PATH)
         sample = x.copy()
         for i, param in enumerate(self.params_id): #TODO: check with dimple is there should just be nBs in list or also nA
             if param.startswith('nB'):  # Discrete values
@@ -181,26 +184,26 @@ class Levy:
         reward1 = self.reward(cur_specs,self.specs_ideal,self.specs_id)
 
         if globalsy.counterrrr < 200:
-                f = open("/homes/natelgrw/Documents/out1.txt",'a')
+                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out1.txt",'a')
                 for ordered_dict in param_val:
                     formatted_items = [f"{k}: {format(v, '.3g')}" for k, v in ordered_dict.items()]
                     print(", ".join(formatted_items), file=f)
                 f.close()
         elif globalsy.counterrrr < 1200:
-                f = open("/homes/natelgrw/Documents/out11.txt",'a')
+                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out11.txt",'a')
                 for ordered_dict in param_val:
                     formatted_items = [f"{k}: {format(v, '.3g')}" for k, v in ordered_dict.items()]
                     print(", ".join(formatted_items), file=f)
                 f.close()
         elif globalsy.counterrrr < 2000:
-                f = open("/homes/natelgrw/Documents/out12.txt",'a')
+                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out12.txt",'a')
                 for ordered_dict in param_val:
                     formatted_items = [f"{k}: {format(v, '.3g')}" for k, v in ordered_dict.items()]
                     print(", ".join(formatted_items), file=f)
                 f.close()
 
         if globalsy.counterrrr < 200:
-                f = open("/homes/natelgrw/Documents/out1.txt",'a')
+                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out1.txt",'a')
                 for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
@@ -208,7 +211,7 @@ class Levy:
                 f.close()
                 globalsy.counterrrr=globalsy.counterrrr+1
         elif globalsy.counterrrr < 1200:
-                f = open("/homes/natelgrw/Documents/out11.txt",'a')
+                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out11.txt",'a')
                 for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
@@ -216,7 +219,7 @@ class Levy:
                 f.close()
                 globalsy.counterrrr=globalsy.counterrrr+1
         elif globalsy.counterrrr < 2000:
-                f = open("/homes/natelgrw/Documents/out12.txt",'a')
+                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out12.txt",'a')
                 for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)

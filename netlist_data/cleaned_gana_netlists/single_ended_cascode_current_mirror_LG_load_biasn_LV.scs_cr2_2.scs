@@ -1,8 +1,8 @@
 simulator lang=spectre
-global 0
+global 0 gnd! vdd!
 parameters biasn={{biasn}} lg_vbiasn={{lg_vbiasn}} lg_vbiasp2={{lg_vbiasp2}} nA={{nA}} nB10={{nB10}} nB11={{nB11}} nB12={{nB12}} nB13={{nB13}} nB14={{nB14}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nB8={{nB8}} nB9={{nB9}} nR0={{nR0}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
-include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
-include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
+include "/homes/natelgrw/Documents/titan_foundation_model/lstp/7nfet.pm"
+include "/homes/natelgrw/Documents/titan_foundation_model/lstp/7pfet.pm"
 
 subckt single_ended_cascode_current_mirror Vbiasn Vbiasn2 Vbiasp2 Vinn Vinp Voutn
 *.PININFO Vbiasn:I Vbiasn2:I Vbiasp2:I Vinn:I Vinp:I Voutn:O

@@ -4,47 +4,47 @@ measurement:
   meas_params: {} # high level measurement params go here for post process
   testbenches:
     ac_dc:
-      netlist_template: "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/eval_engines/spectre/netlist_templates/7nm/single_ended_cascode_current_mirror.scs"
+      netlist_template: "/homes/natelgrw/Documents/titan_foundation_model/netlist_data/cleaned_template_netlists/single_ended_cascode_current_mirror.scs"
       tb_module: "eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man"
       tb_class: "ACTB"
       post_process_function: "process_ac" # a class method defined in meas manager
       tb_params: {} # lower level params for tb evaluation goes here
 
 params:
-  nA1: !!python/tuple [!!float 5.2e-07, !!float 5.6e-07, 13]
-  nB1: !!python/tuple [7, 9, 3]
-  nA2: !!python/tuple [!!float 7.2e-08, !!float 7.6e-08, 13]
-  nB2: !!python/tuple [7, 9, 3]
-  nA3: !!python/tuple [!!float 1.28e-07, !!float 1.36e-07, 13]
-  nB3: !!python/tuple [3, 5, 3]
-  nA4: !!python/tuple [!!float 3.2e-07, !!float 3.5e-07, 13]
-  nB4: !!python/tuple [1, 3, 3]
-  nA5: !!python/tuple [!!float 9e-09, !!float 1.1e-08, 13]
-  nB5: !!python/tuple [6, 8, 3]
-  nA6: !!python/tuple [!!float 3.2e-07, !!float 3.4e-07, 13]
-  nB6: !!python/tuple [2, 4, 3]
-  nA7: !!python/tuple [!!float 2.5e-08, !!float 2.8e-08, 13]
-  nB7: !!python/tuple [9, 11, 3]
-  nA8: !!python/tuple [!!float 3.8e-08, !!float 4.2e-08, 13]
-  nB8: !!python/tuple [3, 5, 3]
-  vbiasp2: !!python/tuple [!!float 0.26, !!float 0.30, 13]
-  vbiasn0: !!python/tuple [!!float 0.48, !!float 0.52, 13]
-  vbiasn2: !!python/tuple [!!float 0.43, !!float 0.47, 13]
-  vcm: !!python/tuple [!!float 0.40, !!float 0.40, 1]
-  vdd: !!python/tuple [!!float 0.8, !!float 0.8, 1]
-  tempc: !!python/tuple [!!float 27, !!float 27, 1]
+  nA1: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB1: !!python/tuple [1, 15, 1]
+  nA2: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB2: !!python/tuple [1, 15, 1]
+  nA3: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB3: !!python/tuple [1, 15, 1]
+  nA4: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB4: !!python/tuple [1, 15, 1]
+  nA5: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB5: !!python/tuple [1, 15, 1]
+  nA6: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB6: !!python/tuple [1, 15, 1]
+  nA7: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB7: !!python/tuple [1, 15, 1]
+  nA8: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
+  nB8: !!python/tuple [1, 15, 1]
+  vbiasp2: !!python/tuple [!!float 0.45, !!float 0.75, 0.01]
+  vbiasn0: !!python/tuple [!!float 0.25, !!float 0.75, 0.01]
+  vbiasn2: !!python/tuple [!!float 0.25, !!float 0.75, 0.01]
+  vcm: !!python/tuple [!!float 0.35, !!float 0.35, 1]
+  vdd: !!python/tuple [!!float 0.70, !!float 0.70, 1]
+  tempc: !!python/tuple [!!float 27.0, !!float 27.0, 1]
 
 spec_range:
-  gain: [!!float 1, null, 1]
-  funity: [!!float 3.0e+5, null, 1]
-  pm: [60.0, null, 1]
+  gain: !!python/tuple [!!float 1.0e+5, !!float 1.0e+6, !!float 1.0e+4]  
+  funity: !!python/tuple [!!float 1.0e+6, !!float 1.0e+8, !!float 1.0e+5] 
+  pm: !!python/tuple [!!float 30.0, !!float 90.0, !!float 1.0] 
+  power: !!python/tuple [!!float 1.0e-7, !!float 1.0e-5, !!float 1.0e-7]
 
-normalize: !!python/tuple [!!float 20.0e+6,3300,!!float 10e-6,70]
+normalize: !!python/tuple [!!float 1.0e+5, !!float 1.0e+7, !!float 1.0, !!float 1.0e-6]
 
 target_spec:
-  gain: !!python/tuple [3300]
-  funity: !!python/tuple [!!float 20.0e+6]
-  pm: !!python/tuple [70]
-  power: !!python/tuple [10e-6]
-
+  gain: !!python/tuple [!!float 1.0e+5]
+  funity: !!python/tuple [!!float 1.0e+7]
+  pm: !!python/tuple [!!float 60.0]
+  power: !!python/tuple [!!float 1.0e-6]
 
