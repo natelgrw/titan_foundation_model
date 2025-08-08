@@ -1,37 +1,37 @@
-database_dir: "/homes/dkochar/migration_project/open-source/nathan/new_folder_7nmsingle_ended_cascode_current_mirror/working_current/checkpoint/db/single_ended_cascode_current_mirror"
+database_dir: "/homes/natelgrw/Documents/titan_foundation_model/results"
 
 measurement:
   meas_params: {} # high level measurement params go here for post process
   testbenches:
     ac_dc:
-      netlist_template: "/homes/natelgrw/Documents/titan_foundation_model/netlist_data/cleaned_template_netlists/single_ended_cascode_current_mirror.scs"
+      netlist_template: "/homes/natelgrw/Documents/titan_foundation_model/netlists/cleaned_template_netlists/single_ended_cascode_current_mirror.scs"
       tb_module: "eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man"
       tb_class: "ACTB"
       post_process_function: "process_ac" # a class method defined in meas manager
       tb_params: {} # lower level params for tb evaluation goes here
 
 params:
-  nA1: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB1: !!python/tuple [1, 15, 1]
-  nA2: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB2: !!python/tuple [1, 15, 1]
-  nA3: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB3: !!python/tuple [1, 15, 1]
-  nA4: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB4: !!python/tuple [1, 15, 1]
-  nA5: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB5: !!python/tuple [1, 15, 1]
-  nA6: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB6: !!python/tuple [1, 15, 1]
-  nA7: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB7: !!python/tuple [1, 15, 1]
-  nA8: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-10]
-  nB8: !!python/tuple [1, 15, 1]
-  vbiasp2: !!python/tuple [!!float 0.45, !!float 0.75, 0.01]
-  vbiasn0: !!python/tuple [!!float 0.25, !!float 0.75, 0.01]
-  vbiasn2: !!python/tuple [!!float 0.25, !!float 0.75, 0.01]
-  vcm: !!python/tuple [!!float 0.35, !!float 0.35, 1]
-  vdd: !!python/tuple [!!float 0.70, !!float 0.70, 1]
+  nA1: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB1: !!python/tuple [1, 20, 1]
+  nA2: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB2: !!python/tuple [1, 20, 1]
+  nA3: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB3: !!python/tuple [1, 20, 1]
+  nA4: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB4: !!python/tuple [1, 20, 1]
+  nA5: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB5: !!python/tuple [1, 20, 1]
+  nA6: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB6: !!python/tuple [1, 20, 1]
+  nA7: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB7: !!python/tuple [1, 20, 1]
+  nA8: !!python/tuple [!!float 1.0e-8, !!float 3.0e-8, !!float 1.0e-9]
+  nB8: !!python/tuple [1, 20, 1]
+  vbiasp2: !!python/tuple [!!float 0, !!float 1.0, 0.01]
+  vbiasn0: !!python/tuple [!!float 0, !!float 1.0, 0.01]
+  vbiasn2: !!python/tuple [!!float 0, !!float 1.0, 0.01]
+  vcm: !!python/tuple [!!float 0.50, !!float 0.50, 1]
+  vdd: !!python/tuple [!!float 1.0, !!float 1.0, 1]
   tempc: !!python/tuple [!!float 27.0, !!float 27.0, 1]
 
 spec_range:

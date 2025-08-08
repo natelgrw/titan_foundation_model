@@ -6,12 +6,14 @@ import scipy.interpolate as interp
 import scipy.optimize as sciopt
 import matplotlib.pyplot as plt
 import globalsy
+
 class OpampMeasMan(EvaluationEngine):
 
     def __init__(self, yaml_fname):
         EvaluationEngine.__init__(self, yaml_fname)
 
     def get_specs(self, results_dict, params):
+        print("Results dict keys:", results_dict.keys())
         specs_dict = dict()
         ac_dc = results_dict['ac_dc']
         for _, res, _ in ac_dc:
@@ -38,8 +40,12 @@ class ACTB(object):
 
     @classmethod
     def process_ac(cls, results, params):
-        ac_result = results['ac']
-        dc_results = results['dcOp']
+        with open("/homes/natelgrw/Documents/titan_foundation_model/results.txt", "w") as f:
+            for key, value in results.items():
+                f.write(f"{key}: {value}\n")
+    
+        ac_result = results['acswp-000_ac']
+        dc_results = results['dcswp-000_dcOp']
 
         vout = ac_result['Voutp']
         freq = ac_result['sweep_values']
@@ -177,7 +183,7 @@ class ACTB(object):
 
     @classmethod
     def find_dc_gain (self, vout):
-        return np.abs(vout)[0]
+        return np.abs(vout)[0] / 0.01
 
     @classmethod
     def find_ugbw(self, freq, vout):
@@ -194,24 +200,12 @@ class ACTB(object):
         phase = np.angle(vout, deg=False)
         phase = np.unwrap(phase) # unwrap the discontinuity
         phase = np.rad2deg(phase) # convert to degrees
-        #
-        #plt.subplot(211)
-        #plt.plot(np.log10(freq[:200]), 20*np.log10(gain[:200]))
-        #plt.subplot(212)
-        #plt.plot(np.log10(freq[:200]), phase)
-        #plt.show()
 
         phase_fun = interp.interp1d(freq, phase, kind='quadratic')
         ugbw, valid = self._get_best_crossing(freq, gain, val=1)
+
         if valid:
-            if phase[0] > 150:
-                return phase_fun(ugbw)
-            else:
-                return 180+phase_fun(ugbw)
-            #if phase_fun(ugbw) > 0:
-            #    return -180+phase_fun(ugbw)
-            #else:
-            #    return 180 + phase_fun(ugbw)
+            return 180 + phase_fun(ugbw)
         else:
             return -180
 
@@ -223,12 +217,10 @@ class ACTB(object):
             return interp_fun(x) - val
 
         xstart, xstop = xvec[0], xvec[-1]
+
         try:
             return sciopt.brentq(fzero, xstart, xstop), True
         except ValueError:
-            # avoid no solution
-            # if abs(fzero(xstart)) < abs(fzero(xstop)):
-            #     return xstart
             return xstop, False
 
 if __name__ == '__main__':

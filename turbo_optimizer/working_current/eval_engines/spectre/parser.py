@@ -6,8 +6,17 @@ import libpsf
 import fnmatch
 import pdb
 import IPython
+import subprocess
+import tempfile
 
 IGNORE_LIST = ['*.info', '*.primitives', '*.subckts', 'logFile']
+
+OCEAN_TEMPLATE = """
+resultsDir = \"%(dir_file_path)s\"
+selectResult(resultsDir)
+wave = v(\"%(signal_name)s\" ?result \"tran\")
+ocnPrint(wave ?output \"%(csv_output_path)s\" ?precision 15 ?header t)
+"""
 
 class FileNotCompatible(Exception):
     """
@@ -19,6 +28,31 @@ class FileNotCompatible(Exception):
 def is_ignored(string):
     return any([fnmatch.fnmatch(string, pattern) for pattern in IGNORE_LIST])
 
+def ocean_export_csv(dir_file_path, csv_output_path, signal_name="/Voutp"):
+    """Run OCEAN script to export a signal to CSV."""
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.ocn', delete=False) as tmp_script:
+        script_path = tmp_script.name
+        tmp_script.write(OCEAN_TEMPLATE % {
+            "dir_file_path": dir_file_path,
+            "csv_output_path": csv_output_path,
+            "signal_name": signal_name
+        })
+
+    try:
+        result = subprocess.run(
+            ["ocean", "-nograph", "-restore", script_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=30  # prevent hanging forever
+        )
+        print(result.stdout)
+        print(result.stderr)
+        if result.returncode != 0:
+            raise RuntimeError(f"OCEAN error:\n{result.stderr}")
+    finally:
+        os.remove(script_path)
+
 class SpectreParser(object):
 
     @classmethod
@@ -29,11 +63,32 @@ class SpectreParser(object):
         for file in files:
             if is_ignored(file):
                 continue
+
+            file_path = os.path.join(raw_folder, file)
+
+            if file.endswith(".tran.tran"):
+                base_name = file.replace(".tran.tran", "")
+                output_csv = os.path.join(folder_path, f"{base_name}_Voutp.csv")
+
+                if not os.path.exists(output_csv):  # don’t overwrite existing CSVs
+                    try:
+                        print(f"file_path = {file_path}")
+                        print(f"is file? {os.path.isfile(file_path)}")
+                        print(f"is dir? {os.path.isdir(file_path)}")
+                        print(f"parent dir = {os.path.dirname(file_path)}")
+                        ocean_export_csv(os.path.dirname(file_path), output_csv, signal_name="/Voutp")
+                        print(f"Exported CSV to {output_csv}")
+                    except Exception as e:
+                        print(f"Failed to export {file}: {e}")
+                else:
+                    print(f"CSV already exists: {output_csv}")
+                continue
+
             try:
-                file = os.path.join(raw_folder, file)
-                datum = cls.process_file(file)
+                datum = cls.process_file(file_path)
             except FileNotCompatible:
-                # print('failed on {}'.format(file))
+                with open("/homes/natelgrw/Documents/titan_foundation_model/badfiles.txt", "a") as f:
+                    f.write('failed on {}'.format(file))
                 continue
 
             _, kwrd = os.path.split(file)
@@ -48,6 +103,8 @@ class SpectreParser(object):
         try:
             psfobj = libpsf.PSFDataSet(fpath)
         except:
+            with open("/homes/natelgrw/Documents/titan_foundation_model/badfiles.txt", "a") as f:
+                f.write("File not compatible: {}\n".format(file))
             raise FileNotCompatible('file {} was not compatible with libpsf'.format(file))
 
         is_swept = psfobj.is_swept()

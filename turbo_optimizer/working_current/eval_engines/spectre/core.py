@@ -41,7 +41,6 @@ class SpectreWrapper(object):
         # implement get_config_info() later
 
         netlist_loc = tb_dict['netlist_template']
-        #print(netlist_loc)
         if not os.path.isabs(netlist_loc):
             netlist_loc = os.path.abspath(netlist_loc)
         pp_module = importlib.import_module(tb_dict['tb_module'])
@@ -135,10 +134,7 @@ class SpectreWrapper(object):
         results = self._parse_result(design_folder)
         if self.post_process:
             specs = self.post_process(results, self.tb_params)
-            #shutil.rmtree(design_folder)
-        #    print("design_folder", design_folder)
             return state, specs, info
-        #print("design_folder", design_folder)
         specs = results
         
         return state, specs, info
@@ -147,7 +143,8 @@ class SpectreWrapper(object):
         _, folder_name = os.path.split(design_folder)
         raw_folder = os.path.join(design_folder, '{}.raw'.format(folder_name))
         res = SpectreParser.parse(raw_folder)
-        
+        with open("/homes/natelgrw/Documents/titan_foundation_model/files.txt", "w") as f:
+            f.write(str(res))        
        
         ##print(os.system("ls -l " + os.path.join("/proc",str(os.getpid()),"fd")))
         #for fd in os.listdir(os.path.join("/proc", str(os.getpid()), "fd")):
@@ -195,7 +192,10 @@ class EvaluationEngine(object):
         self.params_vec = {}
         self.search_space_size = 1
         for key, value in params.items():
-            self.params_vec[key] = np.arange(value[0], value[1], value[2]).tolist()
+            if value[0] == value[1]:
+                self.params_vec[key] = [value[0]]
+            else:
+                self.params_vec[key] = np.arange(value[0], value[1], value[2]).tolist()
             self.search_space_size = self.search_space_size * len(self.params_vec[key])
 
         # minimum and maximum of each parameter
@@ -282,20 +282,29 @@ class EvaluationEngine(object):
             print(getattr(e, 'message', str(e)))
           results.append(result)
         return_loc=netlist_module.return_path()
-        #print(return_loc)
-        shutil.rmtree(return_loc)
         return results
 
     def _evaluate(self, design, parallel_config):
         state_dict = dict()
-        for i, key in enumerate(self.params_vec.keys()):
-            state_dict[key] = self.params_vec[key][design[i]]
+        design_i = 0
+        for key, vec in self.params_vec.items():
+            if len(vec) == 1:
+                state_dict[key] = vec[0]
+            else:
+                state_dict[key] = vec[design.id[design_i]]
+                design_i += 1
+
+        print("PARAMS in state_dict:")
+        for k, v in state_dict.items():
+            print(f"{k}: {v}")
+
         state = [state_dict]
         dsn_names = [design.id]
-        print(state_dict)
+        print("State dict:", state_dict)
+
         results = {}
         for netlist_name, netlist_module in self.netlist_module_dict.items():
-            results[netlist_name] = netlist_module.create_design_and_simulate(state, dsn_names)
+            results[netlist_name] = netlist_module.create_design_and_simulate(state_dict, dsn_names)
 
         specs_dict = self.get_specs(results, self.measurement_specs['meas_params'])
         print(specs_dict)

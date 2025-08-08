@@ -1,0 +1,51 @@
+simulator lang=spectre
+global 0
+parameters ibias={{ibias}} nA={{nA}} nB0={{nB0}} nB1={{nB1}} nB2={{nB2}} nB3={{nB3}} nB4={{nB4}} nB5={{nB5}} nB6={{nB6}} nB7={{nB7}} nC1={{nC1}} nC2={{nC2}} tempc={{tempc}} vcm={{vcm}} vdd={{vdd}} 
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7nfet.pm"
+include "/homes/natelgrw/Documents/TURBO_circuit_optimizer/lstp/7pfet.pm"
+
+subckt  one_stage_fully_differential_op_amp1 ibias in1 in2 out1 out2 gnd! vdd! vref
+
+MM1 outFeedback outFeedback gnd! gnd! nfet l=nA nfin=nB0
+MM2 FeedbackStageYout1 FeedbackStageYout1 gnd! gnd! nfet l=nA nfin=nB0
+MM3 ibias ibias vdd! vdd! pfet l=nA nfin=nB1
+MM4 out1 outFeedback gnd! gnd! nfet l=nA nfin=nB2
+MM5 out2 outFeedback gnd! gnd! nfet l=nA nfin=nB2
+MM6 out1 in1 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pfet l=nA nfin=nB3
+MM7 out2 in2 FirstStageYsourceTransconductance FirstStageYsourceTransconductance pfet l=nA nfin=nB3
+MM8 outFeedback vref FeedbackStageYsourceTransconductance1 FeedbackStageYsourceTransconductance1 pfet l=nA nfin=nB4
+MM9 outFeedback vref FeedbackStageYsourceTransconductance2 FeedbackStageYsourceTransconductance2 pfet l=nA nfin=nB4
+MM10 FeedbackStageYout1 out2 FeedbackStageYsourceTransconductance1 FeedbackStageYsourceTransconductance1 pfet l=nA nfin=nB5
+MM11 FeedbackStageYout1 out1 FeedbackStageYsourceTransconductance2 FeedbackStageYsourceTransconductance2 pfet l=nA nfin=nB5
+MM12 FeedbackStageYsourceTransconductance1 ibias vdd! vdd! pfet l=nA nfin=nB6
+MM13 FeedbackStageYsourceTransconductance2 ibias vdd! vdd! pfet l=nA nfin=nB6
+MM14 FirstStageYsourceTransconductance ibias vdd! vdd! pfet l=nA nfin=nB7
+C1 out1 gnd! capacitor c=nC1
+C2 out2 gnd! capacitor c=nC2
+ends one_stage_fully_differential_op_amp1
+
+
+VS (gnd! 0) vsource dc=0 type=dc
+V0 (vdd! gnd!) vsource dc=vdd type=dc
+V2 (in gnd!) vsource type=dc mag=1
+E1 (Vinp cm in gnd!) vcvs gain=.5
+E0 (Vinn cm in gnd!) vcvs gain=-0.5
+V1 (cm gnd!) vsource dc=vcm type=dc
+I0 (ibias gnd!) isource dc=ibias type=dc
+
+xi0 ibias in1 in2 out gnd! vdd! one_stage_fully_differential_op_amp1
+
+simulatorOptions options psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
+    iabstol=1e-12 temp=tempc tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
+    maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
+    sensfile="../psf/sens.output" checklimitdest=psf
+    ac ac start=1 stop=100G dec=10 annotate=status
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub
