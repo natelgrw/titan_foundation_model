@@ -1,0 +1,4 @@
+metrics- gain:  0.014 , UGBW:  1.0 , PM:  -1.8e+02 , power:  4.23e-07 False
+nA1: 1.66e-08, nB1: 6, nA2: 1.1e-08, nB2: 7, nA3: 1.29e-08, nB3: 12, nA4: 2.39e-08, nB4: 3, nA5: 1.71e-08, nB5: 8, nA6: 1.57e-08, nB6: 17, nA7: 2.5e-08, nB7: 5, nA8: 1.11e-08, nB8: 16, vbiasp2: 0.426, vbiasn0: 0.301, vbiasn2: 0.137
+MM0 is in sub-threshold, MM1 is in cut-off, MM2 is in sub-threshold, MM3 is in cut-off, MM4 is in sub-threshold, MM5 is in cut-off, MM6 is in sub-threshold, MM7 is in triode, MM8 is in triode, MM9 is in cut-off, MM10 is in triode, MM11 is in sub-threshold, MM12 is in sub-threshold, MM13 is in cut-off, MM14 is in cut-off
+reward -25

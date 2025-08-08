@@ -1,0 +1,4 @@
+resultsDir = "/homes/natelgrw/Documents/titan_foundation_model/results/designs_single_ended_cascode_current_mirror7565/single_ended_cascode_current_mirror7565_0.17_6.0_0.11_7.0_0.13_12.0_0.24_3.0_0.17_8.0_0.16_17.0_0.25_5.0_0.11_16.0_0.43_0.3_0.14.raw"
+selectResult(resultsDir)
+wave = v("Voutp" ?result "mytran")
+ocnPrint(wave ?output "output.csv" ?precision 15 ?header t)
