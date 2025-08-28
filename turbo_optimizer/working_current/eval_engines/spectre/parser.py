@@ -8,14 +8,19 @@ import pdb
 import IPython
 import subprocess
 import tempfile
+import re
 
 IGNORE_LIST = ['*.info', '*.primitives', '*.subckts', 'logFile']
 
 OCEAN_TEMPLATE = """
 resultsDir = \"%(dir_file_path)s\"
-selectResult(resultsDir)
-wave = v(\"%(signal_name)s\" ?result \"tran\")
-ocnPrint(wave ?output \"%(csv_output_path)s\" ?precision 15 ?header t)
+openResults(resultsDir)
+selectResult('tran)
+wave_1 = v("Voutp")
+wave_2 = v("Vinn")
+ocnPrint(?output \"%(csv_output_path_voutp)s\" wave_1 ?precision 15)
+ocnPrint(?output \"%(csv_output_path_vinn)s\" wave_2 ?precision 15)
+exit
 """
 
 class FileNotCompatible(Exception):
@@ -28,14 +33,14 @@ class FileNotCompatible(Exception):
 def is_ignored(string):
     return any([fnmatch.fnmatch(string, pattern) for pattern in IGNORE_LIST])
 
-def ocean_export_csv(dir_file_path, csv_output_path, signal_name="/Voutp"):
+def ocean_export_csv(dir_file_path, csv_output_path_voutp, csv_output_path_vinn):
     """Run OCEAN script to export a signal to CSV."""
     with tempfile.NamedTemporaryFile(mode='w', suffix='.ocn', delete=False) as tmp_script:
         script_path = tmp_script.name
         tmp_script.write(OCEAN_TEMPLATE % {
             "dir_file_path": dir_file_path,
-            "csv_output_path": csv_output_path,
-            "signal_name": signal_name
+            "csv_output_path_voutp": csv_output_path_voutp,
+            "csv_output_path_vinn": csv_output_path_vinn
         })
 
     try:
@@ -44,7 +49,7 @@ def ocean_export_csv(dir_file_path, csv_output_path, signal_name="/Voutp"):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            timeout=30  # prevent hanging forever
+            timeout=100  # prevent hanging forever
         )
         print(result.stdout)
         print(result.stderr)
@@ -52,6 +57,52 @@ def ocean_export_csv(dir_file_path, csv_output_path, signal_name="/Voutp"):
             raise RuntimeError(f"OCEAN error:\n{result.stderr}")
     finally:
         os.remove(script_path)
+
+def parse_ocean_csv(file_path, key_name, data_dict):
+    """
+    Parse an OCEAN CSV-like file and append data to the given dictionary.
+    Converts:
+        - time to nanoseconds
+        - voltage to millivolts
+    """
+    unit_to_multiplier_time = {
+        "s": 1e9,      # seconds → nanoseconds
+        "n": 1,        # nanoseconds → nanoseconds
+        "p": 1e-3,     # picoseconds → nanoseconds
+        "f": 1e-6,     # femtoseconds → nanoseconds
+    }
+    unit_to_multiplier_voltage = {
+        "V": 1000,     # volts → millivolts
+        "m": 1,        # millivolts → millivolts
+        "u": 1e-3,     # microvolts → millivolts
+    }
+
+    with open(file_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.lower().startswith("time"):
+                continue  # skip header or empty lines
+
+            parts = re.split(r"\s+", line)
+            if len(parts) < 2:
+                continue
+
+            # Parse time
+            match_time = re.match(r"([\d\.\-Ee+]+)([a-z]*)", parts[0])
+            if match_time:
+                time_val = float(match_time.group(1))
+                time_unit = match_time.group(2)
+                time_ns = round(time_val * unit_to_multiplier_time.get(time_unit, 1), 8)
+
+            # Parse voltage
+            match_volt = re.match(r"([\d\.\-Ee+]+)([a-z]*)", parts[1])
+            if match_volt:
+                volt_val = float(match_volt.group(1))
+                volt_unit = match_volt.group(2)
+                volt_mV = round(volt_val * unit_to_multiplier_voltage.get(volt_unit, 1), 8)
+
+            # Append to dictionary
+            data_dict.setdefault(key_name, []).append((time_ns, volt_mV))
 
 class SpectreParser(object):
 
@@ -68,20 +119,25 @@ class SpectreParser(object):
 
             if file.endswith(".tran.tran"):
                 base_name = file.replace(".tran.tran", "")
-                output_csv = os.path.join(folder_path, f"{base_name}_Voutp.csv")
+                output_csv_voutp = os.path.join(folder_path, f"{base_name}_Voutp.csv")
+                output_csv_vinn = os.path.join(folder_path, f"{base_name}_Vinn.csv")
 
-                if not os.path.exists(output_csv):  # don’t overwrite existing CSVs
+                if not os.path.exists(output_csv_voutp) and not os.path.exists(output_csv_vinn):  # don’t overwrite existing CSVs
                     try:
                         print(f"file_path = {file_path}")
                         print(f"is file? {os.path.isfile(file_path)}")
                         print(f"is dir? {os.path.isdir(file_path)}")
                         print(f"parent dir = {os.path.dirname(file_path)}")
-                        ocean_export_csv(os.path.dirname(file_path), output_csv, signal_name="/Voutp")
-                        print(f"Exported CSV to {output_csv}")
+                        ocean_export_csv(file_path, output_csv_voutp, output_csv_vinn)
+                        print(f"Exported CSV to {output_csv_voutp} and {output_csv_vinn}]")
                     except Exception as e:
                         print(f"Failed to export {file}: {e}")
                 else:
-                    print(f"CSV already exists: {output_csv}")
+                    print(f"CSV names already exist")
+
+                parse_ocean_csv(output_csv_voutp, "tran_voutp", data)
+                parse_ocean_csv(output_csv_vinn, "tran_vinn", data)
+
                 continue
 
             try:
@@ -118,7 +174,6 @@ class SpectreParser(object):
 
         psfobj.close()
         return datum
-
 
 if __name__ == '__main__':
 

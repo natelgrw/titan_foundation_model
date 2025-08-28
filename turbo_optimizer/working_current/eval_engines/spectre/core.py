@@ -35,11 +35,6 @@ class SpectreWrapper(object):
 
         :param netlist_loc: the template netlist used for circuit simulation
         """
-
-        # suppose we have a config_info = {'section':'model_lib'}
-        # config_info also contains BASE_TMP_DIR (location for storing simulation netlist/results)
-        # implement get_config_info() later
-
         netlist_loc = tb_dict['netlist_template']
         if not os.path.isabs(netlist_loc):
             netlist_loc = os.path.abspath(netlist_loc)
@@ -145,21 +140,12 @@ class SpectreWrapper(object):
         res = SpectreParser.parse(raw_folder)
         with open("/homes/natelgrw/Documents/titan_foundation_model/files.txt", "w") as f:
             f.write(str(res))        
-       
-        ##print(os.system("ls -l " + os.path.join("/proc",str(os.getpid()),"fd")))
-        #for fd in os.listdir(os.path.join("/proc", str(os.getpid()), "fd")):
-        #    if int(fd) == 16:
-        #      os.close(int(fd))
 
-        #onlyfiles = [f for f in os.listdir(raw_folder) if os.path.isfile(os.path.join(raw_folder, f))]
-        #for file in os.listdir(raw_folder):
-        #  os.remove(os.path.join(raw_folder, file))
         return res
 
     def run(self, states, design_names=None, verbose=False):
         # TODO: Use asyncio to instantiate multiple jobs for running parallel sims
         """
-
         :param states:
         :param design_names: if None default design name will be used, otherwise the given design name will be used
         :param verbose: If True it will print the design name that was created
@@ -171,8 +157,8 @@ class SpectreWrapper(object):
         specs = pool.starmap(self._create_design_and_simulate, arg_list)
         pool.close()
         return specs
+
     def return_path(self):
-        #print(self.gen_dir)
         return self.gen_dir
 
 class EvaluationEngine(object):

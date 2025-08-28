@@ -7,13 +7,12 @@ import torch
 import math
 import matplotlib
 import matplotlib.pyplot as plt
-from eval_engines.spectre.script_test.single_ended_cascode_current_mirror_meas_man import *
+from turbo_optimizer.working_current.eval_engines.spectre.script_test.single_ended_meas_man import *
 import globalsy
 import re
 
-
-SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/netlists/cleaned_template_netlists/single_ended_cascode_current_mirror.scs"
-YAML_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/turbo_optimizer/working_current/eval_engines/spectre/specs_test/single_ended_cascode_current_mirror.yaml"
+SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_netlists/single_ended_low_voltage_cascode_current_mirror.scs"
+YAML_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_configs/single_ended_low_voltage_cascode_current_mirror.yaml"
 
 np.random.seed(2000)
 
@@ -34,9 +33,9 @@ region_mapping = {
 # netlist target specifications
 specs_dict = {
     "gain": 1.0e5,
-    "UGBW": 1.0e7,
+    "UGBW": 1.0e9,
     "PM": 60.0,
-    "power": 1.0e-6
+    "power": 1.0e-6,
 }
 
 # parameter bounds
@@ -155,12 +154,12 @@ class Levy:
             if specs_id[i] == "power" and rel_spec > 0:
                 reward += np.abs(rel_spec)
             elif specs_id[i] == "gain" and rel_spec < 0:
-                reward += 5.0 * np.abs(rel_spec)
+                reward += 50.0 * np.abs(rel_spec)
             elif specs_id[i] == "UGBW" and rel_spec < 0:
-                reward += 10.0 * np.abs(rel_spec)
+                reward += 30.0 * np.abs(rel_spec)
             elif specs_id[i] == "PM" and rel_spec < 0:
-                reward += 10.0 * np.abs(rel_spec)
-        
+                reward += 30.0 * np.abs(rel_spec)
+
         return reward
 
     def __call__(self, x):
@@ -238,7 +237,7 @@ class Levy:
         # logging transistor regions and reward values to text files
         if globalsy.counterrrr < 200:
                 f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out1.txt",'a')
-                for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
+                for i, j in zip(range(6),[0, 1, 2, 3, 4, 5]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
                 print("reward", format(-reward1, '.3g'), file=f)
@@ -246,7 +245,7 @@ class Levy:
                 globalsy.counterrrr=globalsy.counterrrr+1
         elif globalsy.counterrrr < 1200:
                 f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out11.txt",'a')
-                for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
+                for i, j in zip(range(6),[0, 1, 2, 3, 4, 5]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
                 print("reward", format(-reward1, '.3g'), file=f)
@@ -254,7 +253,7 @@ class Levy:
                 globalsy.counterrrr=globalsy.counterrrr+1
         elif globalsy.counterrrr < 2000:
                 f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out12.txt",'a')
-                for i, j in zip(range(15),[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]):
+                for i, j in zip(range(6),[0, 1, 2, 3, 4, 5]):
                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
                    print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
                 print("reward", format(-reward1, '.3g'), file=f)
