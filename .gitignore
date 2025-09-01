@@ -22,5 +22,5 @@ data/*.csv
 #folders
 results/
 netlists/
-results_demo/
+results_d/
 results_opamp2/

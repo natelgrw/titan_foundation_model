@@ -137,9 +137,7 @@ class SpectreWrapper(object):
     def _parse_result(self, design_folder):
         _, folder_name = os.path.split(design_folder)
         raw_folder = os.path.join(design_folder, '{}.raw'.format(folder_name))
-        res = SpectreParser.parse(raw_folder)
-        with open("/homes/natelgrw/Documents/titan_foundation_model/files.txt", "w") as f:
-            f.write(str(res))        
+        res = SpectreParser.parse(raw_folder)       
 
         return res
 

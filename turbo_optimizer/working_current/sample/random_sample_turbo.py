@@ -7,12 +7,12 @@ import torch
 import math
 import matplotlib
 import matplotlib.pyplot as plt
-from turbo_optimizer.working_current.eval_engines.spectre.script_test.single_ended_meas_man import *
+from working_current.eval_engines.spectre.script_test.single_ended_meas_man import *
+from working_current.eval_engines.spectre.specs_test.config_env import *
 import globalsy
 import re
 
 SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_netlists/single_ended_low_voltage_cascode_current_mirror.scs"
-YAML_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_configs/single_ended_low_voltage_cascode_current_mirror.yaml"
 
 np.random.seed(2000)
 
@@ -110,7 +110,7 @@ class Levy:
     - ub (np.ndarray): Upper bounds for the parameters.
     - lb (np.ndarray): Lower bounds for the parameters.
     """
-    def __init__(self, dim, params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb):
+    def __init__(self, dim, params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path):
         self.dim = dim
         self.params_id = params_id
         self.specs_id = specs_id
@@ -120,6 +120,7 @@ class Levy:
         self.tempc = tempc
         self.ub = ub
         self.lb = lb
+        self.yaml_path = yaml_path
 
     def lookup(self, spec, goal_spec):
         """
@@ -170,7 +171,7 @@ class Levy:
         print(np.all(x <= self.ub) and np.all(x >= self.lb))
 
         # creation of cadence simulation environment
-        sim_env = OpampMeasMan(YAML_FILE_PATH)
+        sim_env = OpampMeasMan(self.yaml_path)
 
         # establishing a parameter vector with current values
         sample = x.copy()
@@ -205,11 +206,6 @@ class Levy:
         dummy = cur_specs[0]
         cur_specs[0] = cur_specs[1]
         cur_specs[1] = dummy
-        
-        # printing current specs to text file for validation
-        f = open("/homes/natelgrw/Documents/titan_foundation_model/results/sim_data1.txt",'a')
-        print("cur_specs: ", cur_specs, file=f)
-        f.close()
 
         # calculating reward based on reward() function
         reward1 = self.reward(cur_specs, self.specs_ideal, self.specs_id)
@@ -264,7 +260,9 @@ class Levy:
 
 params_id = extract_parameter_names(SCS_FILE_PATH)
 lb, ub = build_bounds(params_id, shared_ranges)
-f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb)
+config_env = EnvironmentConfig(SCS_FILE_PATH, "single_ended", specs_dict, params_id, lb, ub)
+yaml_path = config_env.write_yaml_configs()
+f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path)
 
 turbo1 = Turbo1(
     f=f,  # handle to objective function
@@ -290,6 +288,8 @@ ind_best = np.argmin(fX)
 f_best, x_best = fX[ind_best], X[ind_best, :]
 
 print("Best value found:\n\tf(x) = %.3f\nObserved at:\n\tx = %s" % (f_best, np.around(x_best, 3)))
+
+config_env.delete_yaml()
 
 # turbo_m = TurboM(
 #     f=f,  # Handle to objective function

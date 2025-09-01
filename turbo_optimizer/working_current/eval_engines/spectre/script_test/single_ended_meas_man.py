@@ -41,9 +41,6 @@ class ACTB(object):
 
     @classmethod
     def process_ac(self, results, params):
-        with open("/homes/natelgrw/Documents/titan_foundation_model/results.txt", "w") as f:
-            for key, value in results.items():
-                f.write(f"{key}: {value}\n")
 
         ac_result_diff = results['acswp-000_ac']
         ac_result_cm = results['acswp-001_ac']
@@ -173,6 +170,7 @@ class ACTB(object):
             phase_at_ugbw = (phase_fun(ugbw) + 180) % 360 - 180
             pm = 180 + phase_at_ugbw
             pm = (pm + 180) % 360 - 180   # final PM in [-180, 180]
+            return pm
         else:
             return -180
 

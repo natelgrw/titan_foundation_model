@@ -143,8 +143,6 @@ class SpectreParser(object):
             try:
                 datum = cls.process_file(file_path)
             except FileNotCompatible:
-                with open("/homes/natelgrw/Documents/titan_foundation_model/badfiles.txt", "a") as f:
-                    f.write('failed on {}'.format(file))
                 continue
 
             _, kwrd = os.path.split(file)
@@ -159,8 +157,6 @@ class SpectreParser(object):
         try:
             psfobj = libpsf.PSFDataSet(fpath)
         except:
-            with open("/homes/natelgrw/Documents/titan_foundation_model/badfiles.txt", "a") as f:
-                f.write("File not compatible: {}\n".format(file))
             raise FileNotCompatible('file {} was not compatible with libpsf'.format(file))
 
         is_swept = psfobj.is_swept()
