@@ -1,6 +1,6 @@
 # ⚡ TITAN: A Foundation Model for Op-Amp Design
 
-TITAN is a foundation model and data generation pipeline for the topology and sizing optimization of operational amplifiers, currently under active development.
+TITAN is a foundation model and automated data generation pipeline for the topology and sizing optimization of operational amplifiers, currently under active development.
 
 Current Version: **0.1.1**
 
