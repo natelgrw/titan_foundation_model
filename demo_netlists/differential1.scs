@@ -4,7 +4,7 @@ parameters use_tran=0 rfeedback_val=10000 dc_offset=0 gain_n=-0.5 tempc=27.0 nA1
 include "/homes/natelgrw/Documents/titan_foundation_model/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/titan_foundation_model/lstp/7pfet.pm"
 
-*---fully_differential_cascode_current_mirror_pfet Vbiasn1 Vbiasn2 Vbiasp0 Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp---
+*---fully_differential_cascode_current_mirror_pmos Vbiasn1 Vbiasn2 Vbiasp0 Vbiasp1 Vbiasp2 Vinn Vinp Voutn Voutp---
 *.PININFO Vbiasn1:I Vbiasn2:I Vbiasp0:I Vbiasp1:I Vbiasp2:I Vinn:I Vinp:I Voutn:O Voutp:O
 MM1 Voutp Vbiasn2 net37 gnd! nfet l=nA5 nfin=nB5
 MM0 Voutn Vbiasn2 net29 gnd! nfet l=nA5 nfin=nB5

@@ -1,3 +1,7 @@
+Version 0.1.1
+Date Released: 09/02/2025
+- User selection prompt to select a demo netlist for simulation and optimization
+
 Version 0.1.0
 Date Released: 09/01/2025
 - Refactored code for writing transistor states to text result files

@@ -12,7 +12,19 @@ from working_current.eval_engines.spectre.specs_test.config_env import *
 import globalsy
 import re
 
-SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_netlists/single_ended_low_voltage_cascode_current_mirror.scs"
+netlist_choices = {
+    "1": "single_ended1",
+    "2": "single_ended2",
+    "3": "single_ended3",
+    "4": "differential1",
+    "5": "differential2",
+    "6": "differential3"
+}
+
+while netlist_choice not in netlist_choices:
+    netlist_choice = input("Invalid choice. Please select 1–6: \n 1: Single Ended Cascode Current Mirror \n 2: Single Ended Low Voltage Cascode Current Mirror \n 3: Single Ended Telescopic \n 4: Differential PMOS Cascode Current Mirror \n 5: Differential Cascode \n 6: Differential PMOS Cascode \n")
+
+SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_netlists/{netlist_choices[netlist_choice]}.scs"
 
 np.random.seed(2000)
 

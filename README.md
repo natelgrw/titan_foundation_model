@@ -2,7 +2,7 @@
 
 TITAN is a foundation model for the topology and sizing optimization of operational amplifiers, currently under active development.
 
-Current Version: **0.1.0**
+Current Version: **0.1.1**
 
 The model is capable of optimizing the following primary specs:  
 
@@ -13,21 +13,22 @@ The model is capable of optimizing the following primary specs:
 
 While simulations compute 11 performance metrics:  
 
-1. Gain  
-2. Unity-Gain Bandwidth (UGBW)
-3. Phase Margin (PM)  
-4. Power  
-5. Common-Mode Rejection Ratio (CMRR)  
-6. Input Offset Voltage (Vos)  
-7. Output Voltage Swing  
-8. Gain Linearity  
-9. Integrated Noise  
-10. Slew Rate  
-11. Settling Time  
+- Gain  
+- Unity-Gain Bandwidth (UGBW)
+- Phase Margin (PM)  
+- Power  
+- Common-Mode Rejection Ratio (CMRR)  
+- Input Offset Voltage (Vos)  
+- Output Voltage Swing  
+- Gain Linearity  
+- Integrated Noise  
+- Slew Rate  
+- Settling Time  
 
 ## 📍 Current Features
 
-- Compatibility for both single ended and differential operational amplifiers (NEW)
+- User prompting for demo netlist selection (NEW)
+- Compatibility for both single ended and differential operational amplifiers
 - 6 demo netlists included for testing and experimentation
 - An automated end-to-end pipeline that runs Cadence simulations and TuRBO optimization on demo netlists
 
@@ -64,6 +65,6 @@ While simulations compute 11 performance metrics:
   ./run_optimizer.sh
   ```
   
-  This script will load your netlists and configuration files, run the TuRBO optimization on the specified specs (gain, UGBW, PM, power), perform repeated Spectre simulations to compute all 11 performance metrics, and save optimized topology, sizing, and metrics to the results/ folder.
+  This script will prompt you toselect a demo netlist for simulation, run the TuRBO optimization on the specified specs (gain, UGBW, PM, power), perform repeated Spectre simulations to compute all 11 performance metrics, and save optimized topology, sizing, and metrics to the results/ folder.
   
   Ensure all absolute paths are updated before running the pipeline. For multiple netlists, repeat ./run_optimizer.sh or modify the config to include additional files. The pipeline assumes Linux-style paths compatible with Cadence simulations.
