@@ -9,6 +9,7 @@
 **Date Released: 09/01/2025**
 - Refactored code for writing transistor states to text result files
 - Reworked Spectre parser and measurement manager for the TuRBO algorithm to accomodate differential op-amps
+- 6 op-amp demo netlists (3 single ended, 3 differential)
 - Fully automated data collection pipeline for both single ended and differential op-amps
 
 
