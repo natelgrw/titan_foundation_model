@@ -17,8 +17,8 @@ SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_netlists
 np.random.seed(2000)
 
 # constant parameter values
-vcm = 0.90
-vdd = 1.80
+vcm = 0.5
+vdd = 1.0
 tempc = 27.0
 
 # transistor power states
@@ -93,6 +93,17 @@ def build_bounds(params_id, shared_ranges):
         lb.append(low)
         ub.append(high)
     return np.array(lb), np.array(ub)
+
+def classify_opamp_type(file_path):
+    """
+    Classifies the operational amplifier type based on the netlist file name.
+    """
+    with open(file_path, "r") as file:
+        for line in file:
+            if "Voutn" in line:
+                return "differential"
+        else:
+            return "single_ended"
 
 class Levy:
     """
@@ -230,37 +241,38 @@ class Levy:
                     print(", ".join(formatted_items), file=f)
                 f.close()
 
-        # logging transistor regions and reward values to text files
+        # dynamically determine number of transistors
+        num_transistors = len(dict3_nparray)
+
+        # determine output file based on counter
         if globalsy.counterrrr < 200:
-                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out1.txt",'a')
-                for i, j in zip(range(6),[0, 1, 2, 3, 4, 5]):
-                   region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
-                   print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
-                print("reward", format(-reward1, '.3g'), file=f)
-                f.close()
-                globalsy.counterrrr=globalsy.counterrrr+1
+            filename = "/homes/natelgrw/Documents/titan_foundation_model/results/out1.txt"
         elif globalsy.counterrrr < 1200:
-                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out11.txt",'a')
-                for i, j in zip(range(6),[0, 1, 2, 3, 4, 5]):
-                   region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
-                   print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
-                print("reward", format(-reward1, '.3g'), file=f)
-                f.close()
-                globalsy.counterrrr=globalsy.counterrrr+1
+            filename = "/homes/natelgrw/Documents/titan_foundation_model/results/out11.txt"
         elif globalsy.counterrrr < 2000:
-                f = open("/homes/natelgrw/Documents/titan_foundation_model/results/out12.txt",'a')
-                for i, j in zip(range(6),[0, 1, 2, 3, 4, 5]):
-                   region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
-                   print(f"MM{j} is in {region}", end=', ' if i < 14 else '\n', file=f)
+            filename = "/homes/natelgrw/Documents/titan_foundation_model/results/out12.txt"
+        else:
+            filename = None
+
+        if filename:
+            with open(filename, 'a') as f:
+                # log transistor regions dynamically
+                for i in range(num_transistors):
+                    region = region_mapping.get(int(dict3_nparray[i]), 'unknown')
+                    end_char = ', ' if i < num_transistors - 1 else '\n'
+                    print(f"MM{i} is in {region}", end=end_char, file=f)
+
+                # log reward
                 print("reward", format(-reward1, '.3g'), file=f)
-                f.close()
-                globalsy.counterrrr=globalsy.counterrrr+1
+
+            globalsy.counterrrr += 1
 
         return reward1
 
 params_id = extract_parameter_names(SCS_FILE_PATH)
 lb, ub = build_bounds(params_id, shared_ranges)
-config_env = EnvironmentConfig(SCS_FILE_PATH, "single_ended", specs_dict, params_id, lb, ub)
+opamp_type = classify_opamp_type(SCS_FILE_PATH)
+config_env = EnvironmentConfig(SCS_FILE_PATH, opamp_type, specs_dict, params_id, lb, ub)
 yaml_path = config_env.write_yaml_configs()
 f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path)
 
@@ -289,7 +301,7 @@ f_best, x_best = fX[ind_best], X[ind_best, :]
 
 print("Best value found:\n\tf(x) = %.3f\nObserved at:\n\tx = %s" % (f_best, np.around(x_best, 3)))
 
-config_env.delete_yaml()
+config_env.del_yaml()
 
 # turbo_m = TurboM(
 #     f=f,  # Handle to objective function

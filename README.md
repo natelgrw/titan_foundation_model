@@ -1,6 +1,8 @@
 # ⚡ TITAN: A Foundation Model for Op-Amp Design
 
-TITAN is a foundation model for the topology and sizing optimization of operational amplifiers.
+TITAN is a foundation model for the topology and sizing optimization of operational amplifiers, currently under active development.
+
+Current Version: **0.1.0**
 
 The model is capable of optimizing the following primary specs:  
 
@@ -23,13 +25,13 @@ While simulations compute 11 performance metrics:
 10. Slew Rate  
 11. Settling Time  
 
-## 📍 Features (Version 0.0.2)
+## 📍 Current Features
 
-- Automated .yaml config handling (NEW)
-- 3 demo netlists included for testing and experimentation
-- An end-to-end pipeline that runs Cadence simulations and TuRBO optimization on netlists
+- Compatibility for both single ended and differential operational amplifiers (NEW)
+- 6 demo netlists included for testing and experimentation
+- An automated end-to-end pipeline that runs Cadence simulations and TuRBO optimization on demo netlists
 
-## 📖 How to Use: 
+## 📖 How to Use
 
 **Requirements:** 
 - Linux/Unix environment
@@ -39,14 +41,13 @@ While simulations compute 11 performance metrics:
 **1. Clone Repository:**
 
   ```
-  bash
-  git clone <repo_url>
+  git clone https://github.com/natelgrw/titan_foundation_model.git
   cd titan_foundation_model
   ```
 
 **2. Update Absolute Paths:**
    
-   The pipeline currently uses absolute paths in `demo_configs/`, `demo_netlists/`, and `turbo_optimizer/`. Modify paths in the relevant scripts/config files to match your local directories.
+   The pipeline currently uses absolute paths in `demo_netlists/` and `turbo_optimizer/`. Modify paths in the relevant scripts/config files to match your local directories.
    
 **3. Create & Activate Conda Environment:**
 

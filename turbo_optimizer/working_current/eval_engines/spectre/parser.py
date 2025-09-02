@@ -12,14 +12,23 @@ import re
 
 IGNORE_LIST = ['*.info', '*.primitives', '*.subckts', 'logFile']
 
-OCEAN_TEMPLATE = """
+OCEAN_TEMPLATE_BOTH = """
 resultsDir = \"%(dir_file_path)s\"
 openResults(resultsDir)
 selectResult('tran)
 wave_1 = v("Voutp")
-wave_2 = v("Vinn")
+wave_2 = v("Voutn")
 ocnPrint(?output \"%(csv_output_path_voutp)s\" wave_1 ?precision 15)
-ocnPrint(?output \"%(csv_output_path_vinn)s\" wave_2 ?precision 15)
+ocnPrint(?output \"%(csv_output_path_voutn)s\" wave_2 ?precision 15)
+exit
+"""
+
+OCEAN_TEMPLATE_SINGLE = """
+resultsDir = \"%(dir_file_path)s\"
+openResults(resultsDir)
+selectResult('tran)
+wave_1 = v("Voutp")
+ocnPrint(?output \"%(csv_output_path_voutp)s\" wave_1 ?precision 15)
 exit
 """
 
@@ -33,14 +42,15 @@ class FileNotCompatible(Exception):
 def is_ignored(string):
     return any([fnmatch.fnmatch(string, pattern) for pattern in IGNORE_LIST])
 
-def ocean_export_csv(dir_file_path, csv_output_path_voutp, csv_output_path_vinn):
-    """Run OCEAN script to export a signal to CSV."""
+def ocean_export_csv(dir_file_path, csv_output_path_voutp, csv_output_path_voutn, include_voutn=True):
+    """Run OCEAN script to export signals to CSV."""
+    template = OCEAN_TEMPLATE_BOTH if include_voutn else OCEAN_TEMPLATE_SINGLE
     with tempfile.NamedTemporaryFile(mode='w', suffix='.ocn', delete=False) as tmp_script:
         script_path = tmp_script.name
-        tmp_script.write(OCEAN_TEMPLATE % {
+        tmp_script.write(template % {
             "dir_file_path": dir_file_path,
             "csv_output_path_voutp": csv_output_path_voutp,
-            "csv_output_path_vinn": csv_output_path_vinn
+            "csv_output_path_voutn": csv_output_path_voutn
         })
 
     try:
@@ -49,7 +59,7 @@ def ocean_export_csv(dir_file_path, csv_output_path_voutp, csv_output_path_vinn)
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            timeout=100  # prevent hanging forever
+            timeout=100
         )
         print(result.stdout)
         print(result.stderr)
@@ -120,23 +130,34 @@ class SpectreParser(object):
             if file.endswith(".tran.tran"):
                 base_name = file.replace(".tran.tran", "")
                 output_csv_voutp = os.path.join(folder_path, f"{base_name}_Voutp.csv")
-                output_csv_vinn = os.path.join(folder_path, f"{base_name}_Vinn.csv")
+                output_csv_voutn = os.path.join(folder_path, f"{base_name}_Voutn.csv")
 
-                if not os.path.exists(output_csv_voutp) and not os.path.exists(output_csv_vinn):  # don’t overwrite existing CSVs
+                if not os.path.exists(output_csv_voutp):
                     try:
-                        print(f"file_path = {file_path}")
-                        print(f"is file? {os.path.isfile(file_path)}")
-                        print(f"is dir? {os.path.isdir(file_path)}")
-                        print(f"parent dir = {os.path.dirname(file_path)}")
-                        ocean_export_csv(file_path, output_csv_voutp, output_csv_vinn)
-                        print(f"Exported CSV to {output_csv_voutp} and {output_csv_vinn}]")
+                        print(f"Exporting {file_path} ...")
+                        # Try with Voutn first
+                        try:
+                            ocean_export_csv(file_path, output_csv_voutp, output_csv_voutn, include_voutn=True)
+                            has_voutn = True
+                        except RuntimeError as e:
+                            if "Voutn" in str(e):  # OCEAN complained
+                                print("⚠️ Voutn not found, retrying without it...")
+                                ocean_export_csv(file_path, output_csv_voutp, output_csv_voutn, include_voutn=False)
+                                has_voutn = False
+                            else:
+                                raise
                     except Exception as e:
                         print(f"Failed to export {file}: {e}")
+                        continue
                 else:
-                    print(f"CSV names already exist")
+                    has_voutn = os.path.exists(output_csv_voutn)
 
+                # Parse voutp always
                 parse_ocean_csv(output_csv_voutp, "tran_voutp", data)
-                parse_ocean_csv(output_csv_vinn, "tran_vinn", data)
+
+                # Parse voutn only if available
+                if has_voutn and os.path.exists(output_csv_voutn):
+                    parse_ocean_csv(output_csv_voutn, "tran_voutn", data)
 
                 continue
 
