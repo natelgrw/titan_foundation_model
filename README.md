@@ -36,7 +36,7 @@ While simulations compute 11 performance metrics:
 
 **Requirements:** 
 - Linux/Unix environment
-- Cadence Virtuoso + Spectre simulator
+- Cadence Virtuoso + Spectre Simulator
 - Conda environment with dependencies specified in `rlenv38.yml`.  
 
 **1. Clone Repository:**
