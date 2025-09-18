@@ -4,6 +4,8 @@ TITAN is a foundation model for the topology and sizing optimization of operatio
 
 Current Version: **0.2.0**
 
+![Data Extraction Pipeline](turbo_optimizer/pipeline.png)
+
 The model is capable of optimizing the following primary specs:  
 
 - Gain  
