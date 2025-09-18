@@ -67,7 +67,7 @@ class Turbo1:
         # Very basic input checks
         assert lb.ndim == 1 and ub.ndim == 1
         assert len(lb) == len(ub)
-        assert np.all(ub > lb)
+        assert np.all(ub >= lb)
         assert max_evals > 0 and isinstance(max_evals, int)
         assert n_init > 0 and isinstance(n_init, int)
         assert batch_size > 0 and isinstance(batch_size, int)

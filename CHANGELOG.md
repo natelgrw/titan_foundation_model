@@ -1,3 +1,8 @@
+Version 0.2.0
+Date Released: 09/18/2025
+- Dynamic user selection for transistor cards, vdd, vcm, and temperature conditions
+- Introduced demo scripts for netlist->graph conversion 
+
 Version 0.1.1
 Date Released: 09/02/2025
 - User selection prompt to select a demo netlist for simulation and optimization

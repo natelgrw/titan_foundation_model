@@ -1,32 +1,28 @@
 simulator lang=spectre 
 global 0 gnd! vdd!
-parameters use_tran=0 rfeedback_val=1000 dc_offset=0 gain_n=-0.5 tempc={{tempc}} nA1={{nA1}} nB1={{nB1}} nA2={{nA2}} nB2={{nB2}} nA3={{nA3}} nB3={{nB3}} nA4={{nA4}} nB4={{nB4}} vdd={{vdd}} vcm={{vcm}} vbiasp0={{vbiasp0}} vbiasn1={{vbiasn1}} vbiasn2={{vbiasn2}} 
-{% if fet_num == 7 %}
+parameters fet_num=7.0 use_tran=0 rfeedback_val=1000 dc_offset=0 gain_n=-0.5 tempc=27.0 nA1=1.1769025570462778e-08 nB1=7.0 nA2=1.2320458045514507e-08 nB2=13.0 nA3=2.3967341809616513e-08 nB3=3.0 nA4=1.759791139772956e-08 nB4=7.0 nA5=1.5414748393109783e-08 nB5=17.0 nA6=2.5165119222583476e-08 nB6=5.0 nA7=1.1283663163400319e-08 nB7=15.0 nA8=2.0366865916223905e-08 nB8=9.0 vdd=1.0 vcm=0.5 vbiasp2=0.39742907240530834 vbiasn0=0.3951074865357475 vbiasn2=0.3898508166064796 
+
 include "/homes/natelgrw/Documents/titan_foundation_model/lstp/7nfet.pm"
 include "/homes/natelgrw/Documents/titan_foundation_model/lstp/7pfet.pm"
-{% elif fet_num == 10 %}
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/10nfet.pm"
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/10pfet.pm"
-{% elif fet_num == 14 %}
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/14nfet.pm"
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/14pfet.pm"
-{% elif fet_num == 16 %}
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/16nfet.pm"
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/16pfet.pm"
-{% elif fet_num == 20 %}
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/20nfet.pm"
-include "/homes/natelgrw/Documents/titan_foundation_model/lstp/20pfet.pm"
-{% endif %}
 
-*---fully_differential_telescopic_pmos Vbiasn1 Vbiasn2 Vbiasp0 Vinn Vinp Voutn Voutp---
-*.PININFO Vbiasn1:I Vbiasn2:I Vbiasp0:I Vinn:I Vinp:I Voutn:O Voutp:O
-MM0 Voutp Vbiasn2 net12 net12 nfet l=nA4 nfin=nB4
-MM1 Voutn Vbiasn2 net17 net17 nfet l=nA4 nfin=nB4
-MM8 net17 Vbiasn1 gnd! gnd! nfet l=nA3 nfin=nB3
-MM9 net12 Vbiasn1 gnd! gnd! nfet l=nA3 nfin=nB3
-MM5 net14 Vbiasp0 vdd! vdd! pfet l=nA2 nfin=nB2
-MM7 Voutp Vinn net14 net18 pfet l=nA1 nfin=nB1
-MM6 Voutn Vinp net14 net18 pfet l=nA1 nfin=nB1
+
+*---single_ended_cascode_current_mirror Vbiasn0 Vbiasn2 Vbiasp2 Vinn Vinp Voutp---
+*.PININFO Vbiasn0:I Vbiasn2:I Vbiasp2:I Vinn:I Vinp:I Voutp:O
+MM12 net12 Vbiasp2 net37 vdd! pfet l=nA6 nfin=nB6
+MM11 net23 Vbiasp2 net36 vdd! pfet l=nA3 nfin=nB3
+MM10 net10 Vbiasp2 net35 vdd! pfet l=nA6 nfin=nB6
+MM9 Voutp Vbiasp2 net34 vdd! pfet l=nA3 nfin=nB3
+MM2 net37 net12 vdd! vdd! pfet l=nA5 nfin=nB5
+MM1 net36 net23 vdd! vdd! pfet l=nA4 nfin=nB4
+MM6 net35 net12 vdd! vdd! pfet l=nA5 nfin=nB5
+MM5 net34 net23 vdd! vdd! pfet l=nA4 nfin=nB4
+MM14 net10 Vbiasn2 net33 gnd! nfet l=nA2 nfin=nB2
+MM13 Voutp Vbiasn2 net31 gnd! nfet l=nA2 nfin=nB2
+MM3 net23 Vinp net17 gnd! nfet l=nA7 nfin=nB7
+MM0 net12 Vinn net17 gnd! nfet l=nA7 nfin=nB7
+MM4 net17 Vbiasn0 gnd! gnd! nfet l=nA8 nfin=nB8
+MM8 net33 net10 gnd! gnd! nfet l=nA1 nfin=nB1
+MM7 net31 net10 gnd! gnd! nfet l=nA1 nfin=nB1
 
 *---Ground, VDD, VCM Declarations---
 VS (gnd! 0) vsource dc=0 type=dc
@@ -52,17 +48,15 @@ Rin3 (Vinn Vinn_norm) resistor r=(1 / (1 - use_tran + 1p))
 Rin4 (Vinn Vinn_tran) resistor r=(1 / (use_tran + 1p))
 
 Rfeedback_p (Vinn Voutp) resistor r=((use_tran * rfeedback_val) + ((1 - use_tran) * 1T))
-Rfeedback_n (Vinp Voutn) resistor r=((use_tran * rfeedback_val) + ((1 - use_tran) * 1T))
 
 Ctran_p (Voutp gnd!) capacitor c=(use_tran * 50f)
-Ctran_n (Voutn gnd!) capacitor c=(use_tran * 50f)
 
 *---Bias Voltages---
-VP (Vbiasp0 gnd!) vsource dc=vbiasp0 type=dc
-VN1 (Vbiasn1 gnd!) vsource dc=vbiasn1 type=dc
+VP2 (Vbiasp2 gnd!) vsource dc=vbiasp2 type=dc
+VN (Vbiasn0 gnd!) vsource dc=vbiasn0 type=dc
 VN2 (Vbiasn2 gnd!) vsource dc=vbiasn2 type=dc
 
-simulatorOptions options psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
+simulatorOptions options rawfmt=psfbin psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
     iabstol=1e-12 temp=tempc tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
     maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
     sensfile="../psf/sens.output" checklimitdest=psf 
@@ -95,5 +89,3 @@ subckts info what=subckts where=rawfile
 
 save V0:p  MM0:gm MM0:vgs MM0:vds MM0:ids MM0:region  MM1:gm MM1:vgs MM1:vds MM1:ids MM1:region  MM2:gm MM2:vgs MM2:vds MM2:ids MM2:region  MM3:gm MM3:vgs MM3:vds MM3:ids MM3:region  MM4:gm MM4:vgs MM4:vds MM4:ids MM4:region  MM5:gm MM5:vgs MM5:vds MM5:ids MM5:region  MM6:gm MM6:vgs MM6:vds MM6:ids MM6:region  MM7:gm MM7:vgs MM7:vds MM7:ids MM7:region  MM8:gm MM8:vgs MM8:vds MM8:ids MM8:region  MM9:gm MM9:vgs MM9:vds MM9:ids MM9:region  MM10:gm MM10:vgs MM10:vds MM10:ids MM10:region  MM11:gm MM11:vgs MM11:vds MM11:ids MM11:region  MM12:gm MM12:vgs MM12:vds MM12:ids MM12:region  MM13:gm MM13:vgs MM13:vds MM13:ids MM13:region  MM14:gm MM14:vgs MM14:vds MM14:ids MM14:region
 saveOptions options save=allpub rawfmt=psfbin
-
-

@@ -2,7 +2,7 @@
 
 TITAN is a foundation model for the topology and sizing optimization of operational amplifiers, currently under active development.
 
-Current Version: **0.1.1**
+Current Version: **0.2.0**
 
 The model is capable of optimizing the following primary specs:  
 
@@ -25,9 +25,10 @@ While simulations compute 11 performance metrics:
 - Slew Rate  
 - Settling Time  
 
-## 📍 Current Features
+## ⚡ Current Features
 
-- User prompting for demo netlist selection (NEW)
+- Graph conversion demo scripts (NEW)
+- User prompting for vdd, vcm, tempc, transistor cards, and netlist selection (NEW)
 - Compatibility for both single ended and differential operational amplifiers
 - 6 demo netlists included for testing and experimentation
 - An automated end-to-end pipeline that runs Cadence simulations and TuRBO optimization on demo netlists

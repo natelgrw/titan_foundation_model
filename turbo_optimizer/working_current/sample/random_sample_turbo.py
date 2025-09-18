@@ -21,6 +21,8 @@ netlist_choices = {
     "6": "differential3"
 }
 
+netlist_choice = input("Select a netlist to optimize (1–6): \n 1: Single Ended Cascode Current Mirror \n 2: Single Ended Low Voltage Cascode Current Mirror \n 3: Single Ended Telescopic \n 4: Differential PMOS Cascode Current Mirror \n 5: Differential Cascode \n 6: Differential PMOS Cascode \n")
+
 while netlist_choice not in netlist_choices:
     netlist_choice = input("Invalid choice. Please select 1–6: \n 1: Single Ended Cascode Current Mirror \n 2: Single Ended Low Voltage Cascode Current Mirror \n 3: Single Ended Telescopic \n 4: Differential PMOS Cascode Current Mirror \n 5: Differential Cascode \n 6: Differential PMOS Cascode \n")
 
@@ -29,9 +31,10 @@ SCS_FILE_PATH = f"/homes/natelgrw/Documents/titan_foundation_model/demo_netlists
 np.random.seed(2000)
 
 # constant parameter values
-vcm = 0.5
-vdd = 1.0
-tempc = 27.0
+fet_num = int(input("Input transistor card size in nm (e.g. 7): "))
+vdd = float(input("Input supply voltage for simulation in volts (e.g. 1.0): "))
+vcm = float(input("Input common mode voltage for simulation in volts (e.g. 0.5): "))
+tempc = float(input("Input temperature for simulation in degrees Celsius (e.g. 27.0): "))
 
 # transistor power states
 region_mapping = {
@@ -48,6 +51,7 @@ specs_dict = {
     "UGBW": 1.0e9,
     "PM": 60.0,
     "power": 1.0e-6,
+    "CMRR": 5000.0
 }
 
 # parameter bounds
@@ -72,9 +76,6 @@ def extract_parameter_names(scs_file):
         for line in file:
             if line.strip().startswith("parameters"):
                 matches = re.findall(r'(\w+)=', line)
-                matches.remove("tempc")
-                matches.remove("vcm")
-                matches.remove("vdd")
                 matches.remove("dc_offset")
                 matches.remove("gain_n")
                 matches.remove("use_tran")
@@ -100,10 +101,19 @@ def build_bounds(params_id, shared_ranges):
             low, high = shared_ranges['cc']
         elif pname.startswith("nR"):
             low, high = shared_ranges['rr']
+        elif pname.startswith("vdd"):
+            low, high = (vdd, vdd)
+        elif pname.startswith("vcm"):
+            low, high = (vcm, vcm)
+        elif pname.startswith("tempc"):
+            low, high = (tempc, tempc)
+        elif pname.startswith("fet_num"):
+            low, high = (fet_num, fet_num)
         else:
-            raise ValueError(f"Unknown parameter: {pname}")
+            raise ValueError(f"Parameter {pname} not recognized in shared_ranges.")
         lb.append(low)
         ub.append(high)
+
     return np.array(lb), np.array(ub)
 
 def classify_opamp_type(file_path):
@@ -133,7 +143,7 @@ class Levy:
     - ub (np.ndarray): Upper bounds for the parameters.
     - lb (np.ndarray): Lower bounds for the parameters.
     """
-    def __init__(self, dim, params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path):
+    def __init__(self, dim, params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path, fet_num):
         self.dim = dim
         self.params_id = params_id
         self.specs_id = specs_id
@@ -144,6 +154,7 @@ class Levy:
         self.ub = ub
         self.lb = lb
         self.yaml_path = yaml_path
+        self.fet_num = fet_num
 
     def lookup(self, spec, goal_spec):
         """
@@ -183,6 +194,8 @@ class Levy:
                 reward += 30.0 * np.abs(rel_spec)
             elif specs_id[i] == "PM" and rel_spec < 0:
                 reward += 30.0 * np.abs(rel_spec)
+            elif specs_id[i] == "CMRR" and rel_spec < 0:
+                reward += 10.0 * np.abs(rel_spec)
 
         return reward
 
@@ -206,6 +219,7 @@ class Levy:
         sample = np.append(sample, self.vcm)
         sample = np.append(sample, self.vdd)
         sample = np.append(sample, self.tempc)
+        sample = np.append(sample, self.fet_num)
     
         param_val = [OrderedDict(list(zip(self.params_id,sample)))]
 
@@ -286,7 +300,7 @@ lb, ub = build_bounds(params_id, shared_ranges)
 opamp_type = classify_opamp_type(SCS_FILE_PATH)
 config_env = EnvironmentConfig(SCS_FILE_PATH, opamp_type, specs_dict, params_id, lb, ub)
 yaml_path = config_env.write_yaml_configs()
-f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path)
+f = Levy(len(lb), params_id, specs_id, specs_ideal, vcm, vdd, tempc, ub, lb, yaml_path, fet_num)
 
 turbo1 = Turbo1(
     f=f,  # handle to objective function
