@@ -1,4 +1,4 @@
-# ⚡ TITAN: A Foundation Model for Op-Amp Design
+# TITAN: A Foundation Model for Op-Amp Design
 
 TITAN is a foundation model for the topology and sizing optimization of operational amplifiers, currently under active development.
 
