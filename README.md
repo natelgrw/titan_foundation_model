@@ -1,10 +1,12 @@
-# ⚡ TITAN: A Foundation Model for Op-Amp Design
+# TITAN: A Foundation Model for Op-Amp Design
 
 TITAN is a foundation model for the topology and sizing optimization of operational amplifiers, currently under active development.
 
-Current Version: **0.2.0**
+Current Version: **0.1.3**
 
-The model is capable of optimizing the following primary specs:  
+## ⚡ Current Features
+
+The TITAN data collection pipeline is capable of optimizing the following primary specs on op-amp Spectre netlists:  
 
 - Gain  
 - Unity-Gain Bandwidth (UGBW)  
@@ -23,22 +25,20 @@ While simulations compute 11 performance metrics:
 - Gain Linearity  
 - Integrated Noise  
 - Slew Rate  
-- Settling Time  
+- Settle Time  
 
-## ⚡ Current Features
+Additional repository features include:
 
-- Graph conversion demo scripts (NEW)
-- User prompting for vdd, vcm, tempc, transistor cards, and netlist selection (NEW)
+- User prompting for vdd, vcm, tempc, transistor cards, and netlist selection
 - Compatibility for both single ended and differential operational amplifiers
 - 6 demo netlists included for testing and experimentation
-- An automated end-to-end pipeline that runs Cadence simulations and TuRBO optimization on demo netlists
 
 ## 📖 How to Use
 
 **Requirements:** 
 - Linux/Unix environment
-- Cadence Virtuoso + Spectre simulator
-- Conda environment with dependencies specified in `rlenv38.yml`.  
+- Cadence Spectre, Virtuoso, and ViVA software
+- Conda environment with all dependencies specified in `rlenv38.yml`
 
 **1. Clone Repository:**
 
