@@ -49,7 +49,7 @@ Additional repository features include:
 
 **2. Update Absolute Paths:**
    
-   The pipeline currently uses absolute paths in `demo_netlists/` and `turbo_optimizer/`. Modify paths in the relevant scripts/config files to match your local directories.
+   The pipeline currently uses absolute paths in `demo_netlists/`, `rlenv38.yml`, and `turbo_optimizer/`. Modify paths in the relevant scripts/config files to match your local directories.
    
 **3. Create & Activate Conda Environment:**
 
