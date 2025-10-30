@@ -66,6 +66,6 @@ Additional repository features include:
   ./run_optimizer.sh
   ```
   
-  This script will prompt you toselect a demo netlist for simulation, run the TuRBO optimization on the specified specs (gain, UGBW, PM, power), perform repeated Spectre simulations to compute all 11 performance metrics, and save optimized topology, sizing, and metrics to the results/ folder.
+  This script will prompt you to select a demo netlist for simulation, run the TuRBO optimization on the specified specs (gain, UGBW, PM, power), perform repeated Spectre simulations to compute all 11 performance metrics, and save optimized topology, sizing, and metrics to the `results/` folder.
   
-  Ensure all absolute paths are updated before running the pipeline. For multiple netlists, repeat ./run_optimizer.sh or modify the config to include additional files. The pipeline assumes Linux-style paths compatible with Cadence simulations.
+  Ensure all absolute paths are updated before running the pipeline. For multiple netlists, repeat `./run_optimizer.sh` or modify the config to include additional files. The pipeline assumes Linux-style paths compatible with Cadence simulations.
