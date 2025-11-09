@@ -33,5 +33,5 @@ Date Released: **08/31/2025**
 
 Version: **0.0.1**
 Date Released: 08/30/2025
-- Establishment of semi-automated Spectre - TuRBO netlist simulation pipeline
+- Semi-automated Spectre - TuRBO netlist simulation pipeline
 - 3 single ended op-amp demo netlists
