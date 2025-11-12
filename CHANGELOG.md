@@ -2,7 +2,7 @@ Version **0.1.3**
 
 Date Released: **10/25/2025**
 
-- Added process documentation and refactored scripts
+- Process documentation and refactored scripts
 
 Version **0.1.2**
 
