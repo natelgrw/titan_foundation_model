@@ -1,6 +1,6 @@
-# ASPECTOR: Analog Circuit Simulation Pipline For Data Collection 
+# ASPECTOR: Analog Circuit Simulation Pipline
 
-TITAN is a foundation model for the topology and sizing optimization of operational amplifiers, currently under active development.
+The Analog Simulation Performance Extraction and Collection Toolkit for Organized Research (ASPECTOR) is a Cadence Spectre based simulation pipeline that searches a wide Analog design space and fine tunes sizing and bias parameters to meet target circuit performance specs.
 
 Current Version: **0.1.3**
 
@@ -10,7 +10,7 @@ Current Version: **0.1.3**
 
 ## ⚡ Current Features
 
-The TITAN data collection pipeline is capable of optimizing the following primary specs on op-amp Spectre netlists:  
+ASPECTOR is capable of optimizing the following primary specs on op-amp Spectre netlists:  
 
 - Gain  
 - Unity-Gain Bandwidth (UGBW)  
@@ -47,8 +47,8 @@ Additional repository features include:
 **1. Clone Repository:**
 
   ```
-  git clone https://github.com/natelgrw/titan_foundation_model.git
-  cd titan_foundation_model
+  git clone https://github.com/natelgrw/aspector_pipeline.git
+  cd aspector_pipeline
   ```
 
 **2. Update Absolute Paths:**
