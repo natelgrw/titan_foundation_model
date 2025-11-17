@@ -4,6 +4,8 @@ TITAN is a foundation model for the topology and sizing optimization of operatio
 
 Current Version: **0.1.3**
 
+![turbo_optimizer/simulation_pipeline.png]
+
 ## ⚡ Current Features
 
 The TITAN data collection pipeline is capable of optimizing the following primary specs on op-amp Spectre netlists:  
