@@ -1,4 +1,4 @@
-# ASPECTOR: Analog Circuit Simulation Pipline
+# ASPECTOR: Analog Netlist Simulation Pipline
 
 The Analog Simulation Performance Extraction and Collection Toolkit for Organized Research (**ASPECTOR**) is a Cadence Spectre based simulation pipeline that searches a wide Analog design space and fine tunes sizing and bias parameters to meet target circuit performance specs.
 
